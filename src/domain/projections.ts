@@ -1,5 +1,5 @@
-import type {VehicleSummary, PriceLocation} from "./models.js";
-import {components} from "../api/schema.js";
+import type { PriceLocation, VehicleSummary } from "./models.js";
+import { components } from "../api/schema.js";
 
 type VehicleDTO = components["schemas"]["VehicleDTO"];
 type VehiclePurchasePriceDTO = components["schemas"]["VehiclePurchasePriceDTO"];
@@ -12,7 +12,7 @@ export function toVehicleSummary(dto: VehicleDTO): VehicleSummary {
         id: dto.id,
         name: dto.name_full ?? dto.name,
         manufacturer: dto.company_name,
-        cargoScu: dto.scu,
+        cargoScu: dto.scu
     };
 }
 
@@ -29,9 +29,17 @@ function formatLocation(dto: {
 }
 
 export function toPurchaseLocation(dto: VehiclePurchasePriceDTO): PriceLocation {
-    return {terminal: dto.terminal_name, location: formatLocation(dto), price: dto.price_buy};
+    return {
+        terminal: dto.terminal_name,
+        location: formatLocation(dto),
+        price: dto.price_buy
+    };
 }
 
 export function toRentalLocation(dto: VehicleRentalPriceDTO): PriceLocation {
-    return {terminal: dto.terminal_name, location: formatLocation(dto), price: dto.price_rent};
+    return {
+        terminal: dto.terminal_name,
+        location: formatLocation(dto),
+        price: dto.price_rent
+    };
 }

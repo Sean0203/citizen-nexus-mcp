@@ -15,7 +15,7 @@ export class TtlCache {
         if (hit && hit.expires > Date.now()) return hit.value as T;
 
         const value = await load();
-        this.store.set(key, {value, expires: Date.now() + ttlMs});
+        this.store.set(key, { value, expires: Date.now() + ttlMs });
         return value;
     }
 
