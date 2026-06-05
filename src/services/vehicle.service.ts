@@ -1,23 +1,16 @@
-import type {VehicleRepository} from "../repositories/vehicle.repository.js";
-import {
-    toVehicleSummary,
-    toPurchaseLocation,
-    toRentalLocation,
-} from "../domain/projections.js";
-import type {VehicleSummary, PriceLocation} from "../domain/models.js";
+import type { VehicleRepository } from "../repositories/vehicle.repository.js";
+import { toPurchaseLocation, toRentalLocation, toVehicleSummary } from "../domain/projections.js";
+import type { PriceLocation, VehicleSummary } from "../domain/models.js";
 
 /** Business logic for vehicles: name search and price lookups. */
 export class VehicleService {
-    constructor(private repo: VehicleRepository) {
-    }
+    constructor(private repo: VehicleRepository) {}
 
     async search(query: string): Promise<VehicleSummary[]> {
         const needle = query.trim().toLowerCase();
         const all = await this.repo.getAll();
         return all
-            .filter((v) =>
-                [v.name, v.name_full, v.slug].some((f) => f?.toLowerCase().includes(needle)),
-            )
+            .filter((v) => [v.name, v.name_full, v.slug].some((f) => f?.toLowerCase().includes(needle)))
             .slice(0, 25)
             .map(toVehicleSummary);
     }

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import {McpServer} from "@modelcontextprotocol/sdk/server/mcp.js";
-import {StdioServerTransport} from "@modelcontextprotocol/sdk/server/stdio.js";
-import {createContainer} from "./container.js";
-import {registerVehicleTools} from "./tools/vehicles.js";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { createContainer } from "./container.js";
+import { registerVehicleTools } from "./tools/vehicles.js";
 
-const server = new McpServer({name: "uex-mcp", version: "0.1.0"});
+const server = new McpServer({ name: "uex-mcp", version: "0.1.0" });
 const container = createContainer();
 
 registerVehicleTools(server, container.vehicleService);
