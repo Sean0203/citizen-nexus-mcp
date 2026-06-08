@@ -36,7 +36,7 @@ Description
 
 ***
 
-## Support
+## Support this project
 
 ***
 

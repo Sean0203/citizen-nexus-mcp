@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const BASE_URL = process.env.UEX_BASE_URL ?? "https://api.uexcorp.space/2.0";
+const BASE_URL = process.env.UEX_BASE_URL ?? "https://api.uexcorp.uk/2.0";
 const API_KEY = process.env.UEX_API_KEY;
 
 // UEX 2.0 wraps every payload in this envelope. Confirm against a live
