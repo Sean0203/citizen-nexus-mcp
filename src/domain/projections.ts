@@ -13,6 +13,7 @@ export function toVehicleModel(dto: VehicleDTO): Vehicle | null {
         return null;
     }
 
+    // TODO evaluate type
     var vehicleTypes: VehicleType[] = (Object.keys(VehicleType) as (keyof typeof VehicleType)[])
         .filter((key) => isNaN(Number(key)))
         .filter((key) => dto[`is_${key}` as keyof VehicleDTO] === 1)
@@ -37,7 +38,7 @@ export function toVehicleModel(dto: VehicleDTO): Vehicle | null {
     };
 }
 
-/** Builds a readable location path from the denormalized price fields. */ // TODO: check for space stations, planetary cities, non-city POIs, etc
+/** Builds a readable location path from the denormalized price fields. */
 function toLocationPath(dto: LocationStruct): string | null {
     const locationPath: string[] = [dto.star_system_name];
 

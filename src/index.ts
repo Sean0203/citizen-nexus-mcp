@@ -1,5 +1,14 @@
 #!/usr/bin/env node
-import "dotenv/config";
+// Load a local .env if present. This is a dev convenience only: dotenv does NOT
+// override variables already in process.env, so values injected by an MCP client
+// config always win. Resolved relative to this file (one level up from dist/ or
+// src/), not cwd, because an MCP client may spawn the server from any directory.
+import { config as loadEnv } from "dotenv";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+
+loadEnv({ path: join(dirname(fileURLToPath(import.meta.url)), "../.env"), quiet: true });
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { createContainer } from "./container.js";

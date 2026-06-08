@@ -1,7 +1,22 @@
 import { z } from "zod";
 
-const BASE_URL = process.env.UEX_BASE_URL ?? "https://api.uexcorp.uk/2.0";
-const API_KEY = process.env.UEX_API_KEY;
+// Read env lazily, not at module load. The value may come from the MCP client
+// config (injected into process.env when the client spawns the server) or from
+// a local .env file (loaded by dotenv in the entry point). Reading inside the
+// request guarantees it is present regardless of import/load order.
+function getBaseUrl(): string {
+    return process.env.UEX_BASE_URL ?? "https://api.uexcorp.uk/2.0";
+}
+
+function getApiKey(): string {
+    const key = process.env.UEX_API_KEY;
+    if (!key) {
+        throw new UexApiError(
+            "UEX_API_KEY is not set. Provide it via your MCP client config (env block) or a .env file."
+        );
+    }
+    return key;
+}
 
 // UEX 2.0 wraps every payload in this envelope. Confirm against a live
 // response and adjust if the shape differs.
@@ -19,10 +34,11 @@ export class UexApiError extends Error {}
  * defensively in projections, since the data is crowdsourced and often null.
  */
 export async function uexGet<T>(path: string, query?: Record<string, string | number | undefined>): Promise<T> {
-    if (!API_KEY) throw new UexApiError("UEX_API_KEY is not set");
+    const apiKey = getApiKey();
 
-    const base = BASE_URL.endsWith("/") ? BASE_URL : BASE_URL + "/";
-    const url = new URL(path.replace(/^\//, ""), base);
+    const base = getBaseUrl();
+    const baseUrl = base.endsWith("/") ? base : base + "/";
+    const url = new URL(path.replace(/^\//, ""), baseUrl);
     if (query) {
         for (const [key, value] of Object.entries(query)) {
             if (value !== undefined) url.searchParams.set(key, String(value));
@@ -30,7 +46,7 @@ export async function uexGet<T>(path: string, query?: Record<string, string | nu
     }
 
     const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${API_KEY}` }
+        headers: { Authorization: `Bearer ${apiKey}` }
     });
     if (!res.ok) {
         throw new UexApiError(`UEX request failed: ${res.status} ${res.statusText} (${url.pathname})`);
