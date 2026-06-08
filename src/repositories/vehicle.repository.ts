@@ -10,25 +10,34 @@ type VehicleRentalPriceDTO = components["schemas"]["VehicleRentalPriceDTO"];
 export class VehicleRepository {
     constructor(private cache: TtlCache) {}
 
+    /** Pre-loads data from vehicle attributes and prices */
+    async warm(): Promise<void> {
+        await Promise.all([
+            this.getAllVehicles(),
+            this.getAllVehiclePurchasePrices(),
+            this.getAllVehicleRentalPrices()
+        ]);
+    }
+
     // Reference data: slow-changing, cache for a day.
-    getAll(): Promise<VehicleDTO[]> {
+    getAllVehicles(): Promise<VehicleDTO[]> {
         return this.cache.get("vehicles", 24 * HOUR, () => uexGet<VehicleDTO[]>("/vehicles/"));
     }
 
     // Price data: community-reported, short TTL.
-    getPurchasePrices(idTerminal: number): Promise<VehiclePurchasePriceDTO[]> {
+    getVehiclePurchasePrices(idTerminal: number): Promise<VehiclePurchasePriceDTO[]> {
         return this.cache.get(`veh_purchase:${idTerminal}`, 5 * MINUTE, () =>
             uexGet<VehiclePurchasePriceDTO[]>(`/vehicles_purchases_prices/id_terminal/${idTerminal}/`)
         );
     }
 
-    getAllPurchasePrices(): Promise<VehiclePurchasePriceDTO[]> {
+    getAllVehiclePurchasePrices(): Promise<VehiclePurchasePriceDTO[]> {
         return this.cache.get("veh_purchase_all", 5 * MINUTE, () =>
             uexGet<VehiclePurchasePriceDTO[]>("/vehicles_purchases_prices_all/")
         );
     }
 
-    getAllRentalPrices(): Promise<VehicleRentalPriceDTO[]> {
+    getAllVehicleRentalPrices(): Promise<VehicleRentalPriceDTO[]> {
         return this.cache.get("veh_rental_all", 5 * MINUTE, () =>
             uexGet<VehicleRentalPriceDTO[]>("/vehicles_rentals_prices_all/")
         );

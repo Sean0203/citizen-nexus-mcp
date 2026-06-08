@@ -7,6 +7,12 @@ export function createContainer() {
     const cache = new TtlCache();
     const vehicleRepository = new VehicleRepository(cache);
     const vehicleService = new VehicleService(vehicleRepository);
+
+    // Preload long-TTL data into the cache at startup
+    void vehicleRepository.warm().catch((err) => {
+        console.error("cache warm failed", err);
+    });
+
     return { vehicleService };
 }
 

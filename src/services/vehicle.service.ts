@@ -1,5 +1,5 @@
 import type { VehicleRepository } from "../repositories/vehicle.repository.js";
-import { toPurchaseLocation, toRentalLocation, toVehicleSummary } from "../domain/projections.js";
+import { toPurchaseLocation, toRentalLocation, toVehicleModel } from "../domain/projections.js";
 import type { PriceLocation, VehicleSummary } from "../domain/models.js";
 
 /** Business logic for vehicles: name search and price lookups. */
@@ -8,15 +8,15 @@ export class VehicleService {
 
     async search(query: string): Promise<VehicleSummary[]> {
         const needle = query.trim().toLowerCase();
-        const all = await this.repo.getAll();
+        const all = await this.repo.getAllVehicles();
         return all
             .filter((v) => [v.name, v.name_full, v.slug].some((f) => f?.toLowerCase().includes(needle)))
             .slice(0, 25)
-            .map(toVehicleSummary);
+            .map(toVehicleModel);
     }
 
     async findPurchaseLocations(idVehicle: number): Promise<PriceLocation[]> {
-        const prices = await this.repo.getAllPurchasePrices();
+        const prices = await this.repo.getAllVehiclePurchasePrices();
         return prices
             .filter((p) => p.id_vehicle === idVehicle)
             .map(toPurchaseLocation)
@@ -24,7 +24,7 @@ export class VehicleService {
     }
 
     async findRentalLocations(idVehicle: number): Promise<PriceLocation[]> {
-        const prices = await this.repo.getAllRentalPrices();
+        const prices = await this.repo.getAllVehicleRentalPrices();
         return prices
             .filter((p) => p.id_vehicle === idVehicle)
             .map(toRentalLocation)
