@@ -1,6 +1,6 @@
-import { uexGet } from "../api/client.js";
+import { uexGet } from "../api/uex/client.js";
 import { HOUR, MINUTE, TtlCache } from "./cache.js";
-import { components } from "../api/schema.js";
+import { components } from "../api/uex/schema.js";
 
 type VehicleDTO = components["schemas"]["VehicleDTO"];
 
