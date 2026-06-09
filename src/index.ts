@@ -14,7 +14,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { createContainer } from "./container.js";
 import { registerVehicleTools } from "./tools/vehicle.tools.js";
 
-const server = new McpServer({ name: "uex-mcp", version: "0.1.0" });
+const server = new McpServer({ name: "citizen-nexus", version: "0.1.0" });
 const container = createContainer();
 
 registerVehicleTools(server, container.vehicleService);
@@ -23,10 +23,10 @@ async function main(): Promise<void> {
     const transport = new StdioServerTransport();
     await server.connect(transport);
     // stdout is reserved for JSON-RPC. Log only to stderr.
-    console.warn("[uex-mcp] ready (stdio)");
+    console.warn("[citizen-nexus] ready (stdio)");
 }
 
 main().catch((err) => {
-    console.error("[uex-mcp] fatal:", err);
+    console.error("[citizen-nexus] fatal:", err);
     process.exit(1);
 });

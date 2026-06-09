@@ -10,24 +10,6 @@ function json(data: unknown) {
 
 export function registerVehicleTools(server: McpServer, service: VehicleService): void {
     server.registerTool(
-        "list_available_vehicles",
-        {
-            title: "List available vehicles",
-            description:
-                "List every in-game vehicle (excludes concept and addon vehicles). Returns each with its id, used by the location tools.",
-            inputSchema: {}
-        },
-        async () => {
-            const results = await service.getAllAvailableVehicles();
-            if (results.length === 0)
-                return {
-                    content: [{ type: "text", text: "No vehicles available." }]
-                };
-            return json(results);
-        }
-    );
-
-    server.registerTool(
         "search_vehicles",
         {
             title: "Search vehicles",
@@ -51,28 +33,4 @@ export function registerVehicleTools(server: McpServer, service: VehicleService)
             return json(results);
         }
     );
-
-    // server.registerTool(
-    //     "find_vehicle_purchase_locations",
-    //     {
-    //         title: "Find where to buy a vehicle",
-    //         description: "List terminals selling a vehicle, cheapest first. Takes a vehicle id from search_vehicles.",
-    //         inputSchema: {
-    //             idVehicle: z.number().describe("Vehicle id from search_vehicles")
-    //         }
-    //     },
-    //     async ({ idVehicle }) => json(await service.findPurchaseLocations(idVehicle))
-    // );
-
-    // server.registerTool(
-    //     "find_vehicle_rental_locations",
-    //     {
-    //         title: "Find where to rent a vehicle",
-    //         description: "List terminals renting a vehicle, cheapest first. Takes a vehicle id from search_vehicles.",
-    //         inputSchema: {
-    //             idVehicle: z.number().describe("Vehicle id from search_vehicles")
-    //         }
-    //     },
-    //     async ({ idVehicle }) => json(await service.findRentalLocations(idVehicle))
-    // );
 }

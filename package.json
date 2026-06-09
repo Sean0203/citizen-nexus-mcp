@@ -1,7 +1,7 @@
 {
-    "name": "uexcorp-mcp-server",
-    "version": "1.0.0",
-    "description": "MCP server for read-only access to the uexcorp.space Star Citizen API",
+    "name": "citizen-nexus-mcp-server",
+    "version": "0.1.0",
+    "description": "MCP server for read-only access to the uex and star citizen wiki APIs.",
     "type": "module",
     "engines": {
         "node": ">=24.0.0"
