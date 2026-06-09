@@ -38,15 +38,17 @@ export enum VehicleType {
 
 export interface Vehicle {
     id: number;
-    name: string | null;
-    name_full: string | null;
+    name: string;
+    name_full: string;
     id_manufacturer: number;
-    manufacturer: string | null;
+    manufacturer: string;
     types: VehicleType[];
-    cargo_scu: number | null;
+    cargo_scu: number;
+    max_container_size: number;
     min_crew: number;
     max_crew: number;
     pad_type: PadType | null;
+    is_concept: boolean;
     is_addon: boolean;
     can_quantum: boolean;
     has_tractor_beam: boolean;
