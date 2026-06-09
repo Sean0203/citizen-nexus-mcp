@@ -1,7 +1,7 @@
 import type { Vehicle } from "./vehicle.models.js";
 import { VehicleType } from "./vehicle.models.js";
 import { PadType } from "./enums.js";
-import { components } from "../api/schema.js";
+import { components } from "../api/uex/schema.js";
 
 type VehicleDTO = components["schemas"]["VehicleDTO"];
 
