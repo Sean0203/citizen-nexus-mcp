@@ -7,7 +7,7 @@
         "node": ">=24.0.0"
     },
     "bin": {
-        "uexcorp-mcp-server": "dist/index.js"
+        "citizen-nexus-mcp-server": "dist/index.js"
     },
     "scripts": {
         "build": "tsc",
