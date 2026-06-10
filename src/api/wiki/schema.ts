@@ -1774,24 +1774,22 @@ export interface components {
              */
             value_range_type?: "linear" | null;
             /** @description Multi-step interpolation segments. Each segment defines its own quality range and modifier start/end values. When present, use these for interpolation instead of quality_range/modifier_range. */
-            value_segments?:
-                | {
-                      /** @description Start quality for this segment */
-                      quality_min?: number;
-                      /** @description End quality for this segment */
-                      quality_max?: number;
-                      /**
-                       * Format: float
-                       * @description Modifier value at quality_min
-                       */
-                      modifier_at_start?: number;
-                      /**
-                       * Format: float
-                       * @description Modifier value at quality_max
-                       */
-                      modifier_at_end?: number;
-                  }[]
-                | null;
+            value_segments?: {
+                /** @description Start quality for this segment */
+                quality_min?: number;
+                /** @description End quality for this segment */
+                quality_max?: number;
+                /**
+                 * Format: float
+                 * @description Modifier value at quality_min
+                 */
+                modifier_at_start?: number;
+                /**
+                 * Format: float
+                 * @description Modifier value at quality_max
+                 */
+                modifier_at_end?: number;
+            }[] | null;
         };
         /**
          * Blueprint Summary Property
@@ -2566,63 +2564,59 @@ export interface components {
             /** @description Raw (unrefined) versions of this commodity, if this is a refined commodity. */
             raw_versions?: components["schemas"]["commodity_version_entry"][] | null;
             /** @description Crafting blueprints that use or produce this commodity. */
-            blueprints?:
-                | {
-                      /** @description Unique blueprint key identifier. */
-                      key?: string;
-                      /** @description Name of the item produced by this blueprint. */
-                      output_name?: string;
-                      /**
-                       * Format: uuid
-                       * @description UUID of the output item entity.
-                       */
-                      output_item_uuid?: string | null;
-                      /** @description Human-readable crafting duration (e.g. "5m 30s"). */
-                      craft_time_label?: string;
-                      /**
-                       * Format: uri
-                       * @description Frontend URL for the blueprint page.
-                       */
-                      web_url?: string;
-                      /**
-                       * Format: uri
-                       * @description API link to the blueprint details.
-                       */
-                      link?: string;
-                  }[]
-                | null;
+            blueprints?: {
+                /** @description Unique blueprint key identifier. */
+                key?: string;
+                /** @description Name of the item produced by this blueprint. */
+                output_name?: string;
+                /**
+                 * Format: uuid
+                 * @description UUID of the output item entity.
+                 */
+                output_item_uuid?: string | null;
+                /** @description Human-readable crafting duration (e.g. "5m 30s"). */
+                craft_time_label?: string;
+                /**
+                 * Format: uri
+                 * @description Frontend URL for the blueprint page.
+                 */
+                web_url?: string;
+                /**
+                 * Format: uri
+                 * @description API link to the blueprint details.
+                 */
+                link?: string;
+            }[] | null;
             /** @description Physical items associated with this commodity in the game. */
-            items?:
-                | {
-                      /** @description Item display name. */
-                      name?: string;
-                      /**
-                       * Format: uuid
-                       * @description UUID of the item entity.
-                       */
-                      uuid?: string | null;
-                      /** @description Item type classification. */
-                      type?: string | null;
-                      /** @description Human-readable label for the item type. */
-                      type_label?: string | null;
-                      /** @description Item sub-type classification. */
-                      sub_type?: string | null;
-                      /** @description Human-readable label for the item sub-type. */
-                      sub_type_label?: string | null;
-                      /** @description Item size grade. */
-                      size?: number | null;
-                      /**
-                       * Format: uri
-                       * @description Frontend URL for the item page.
-                       */
-                      web_url?: string | null;
-                      /**
-                       * Format: uri
-                       * @description API link to the item details.
-                       */
-                      link?: string | null;
-                  }[]
-                | null;
+            items?: {
+                /** @description Item display name. */
+                name?: string;
+                /**
+                 * Format: uuid
+                 * @description UUID of the item entity.
+                 */
+                uuid?: string | null;
+                /** @description Item type classification. */
+                type?: string | null;
+                /** @description Human-readable label for the item type. */
+                type_label?: string | null;
+                /** @description Item sub-type classification. */
+                sub_type?: string | null;
+                /** @description Human-readable label for the item sub-type. */
+                sub_type_label?: string | null;
+                /** @description Item size grade. */
+                size?: number | null;
+                /**
+                 * Format: uri
+                 * @description Frontend URL for the item page.
+                 */
+                web_url?: string | null;
+                /**
+                 * Format: uri
+                 * @description API link to the item details.
+                 */
+                link?: string | null;
+            }[] | null;
             /**
              * Format: uri
              * @description API link to this commodity's full details.
@@ -3636,14 +3630,12 @@ export interface components {
             /** @description Entity tag UUIDs from the database relationship (empty array when not loaded). */
             entity_tags?: string[] | null;
             /** @description Entity tags from the database relationship (empty array when not loaded). */
-            entity_tag_map?:
-                | {
-                      /** @description Unique identifier of the entity tag. */
-                      uuid?: string;
-                      /** @description Name of the entity tag. */
-                      name?: string;
-                  }[]
-                | null;
+            entity_tag_map?: {
+                /** @description Unique identifier of the entity tag. */
+                uuid?: string;
+                /** @description Name of the entity tag. */
+                name?: string;
+            }[] | null;
             /** @description Generated from SInteractionPointParams */
             interactions?: string[] | null;
             /** @description Item ports derived from stdItem.Ports. */
@@ -3725,27 +3717,25 @@ export interface components {
              */
             shops?: Record<string, never>[] | null;
             /** @description Images from external sources for this item. */
-            images?:
-                | {
-                      /**
-                       * @description Image source identifier
-                       * @example starcitizen.tools
-                       */
-                      source?: string;
-                      /** @description URL of the thumbnail image. */
-                      thumbnail_url?: string | null;
-                      /** @description Thumbnail width in pixels. */
-                      thumbnail_width?: number | null;
-                      /** @description Thumbnail height in pixels. */
-                      thumbnail_height?: number | null;
-                      /** @description URL of the original full-size image. */
-                      original_url?: string | null;
-                      /** @description Original image width in pixels. */
-                      original_width?: number | null;
-                      /** @description Original image height in pixels. */
-                      original_height?: number | null;
-                  }[]
-                | null;
+            images?: {
+                /**
+                 * @description Image source identifier
+                 * @example starcitizen.tools
+                 */
+                source?: string;
+                /** @description URL of the thumbnail image. */
+                thumbnail_url?: string | null;
+                /** @description Thumbnail width in pixels. */
+                thumbnail_width?: number | null;
+                /** @description Thumbnail height in pixels. */
+                thumbnail_height?: number | null;
+                /** @description URL of the original full-size image. */
+                original_url?: string | null;
+                /** @description Original image width in pixels. */
+                original_width?: number | null;
+                /** @description Original image height in pixels. */
+                original_height?: number | null;
+            }[] | null;
             /** @description Item prices from UEX Corp API. */
             uex_prices?: {
                 /** @description Purchase prices from UEX Corp. */
@@ -4094,21 +4084,19 @@ export interface components {
              */
             binary_evaluation?: number | null;
             /** @description Optional composition entries describing how generated resource is assembled. */
-            composition?:
-                | {
-                      /**
-                       * @description UUID of the container resource.
-                       * @example bcc8cde9-de58-4e6b-8ee9-37d4aaa507eb
-                       */
-                      container_resource?: string | null;
-                      /**
-                       * Format: double
-                       * @description Ratio of this resource in the composition.
-                       * @example 1
-                       */
-                      ratio?: number | null;
-                  }[]
-                | null;
+            composition?: {
+                /**
+                 * @description UUID of the container resource.
+                 * @example bcc8cde9-de58-4e6b-8ee9-37d4aaa507eb
+                 */
+                container_resource?: string | null;
+                /**
+                 * Format: double
+                 * @description Ratio of this resource in the composition.
+                 * @example 1
+                 */
+                ratio?: number | null;
+            }[] | null;
         };
         /**
          * Resource Network State
@@ -4137,22 +4125,20 @@ export interface components {
             } | null;
             deltas?: components["schemas"]["resource_network_delta"][] | null;
             /** @description Power range modifiers applied when this state is active. */
-            power_ranges?:
-                | {
-                      /**
-                       * Format: double
-                       * @description Start value of the power range.
-                       */
-                      start?: number | null;
-                      /**
-                       * Format: double
-                       * @description Modifier applied within this power range.
-                       */
-                      modifier?: number | null;
-                      /** @description Whether this range should be registered. */
-                      register_range?: boolean | null;
-                  }[]
-                | null;
+            power_ranges?: {
+                /**
+                 * Format: double
+                 * @description Start value of the power range.
+                 */
+                start?: number | null;
+                /**
+                 * Format: double
+                 * @description Modifier applied within this power range.
+                 */
+                modifier?: number | null;
+                /** @description Whether this range should be registered. */
+                register_range?: boolean | null;
+            }[] | null;
         };
         /**
          * Resource Network
@@ -5161,27 +5147,25 @@ export interface components {
              */
             type?: string | null;
             /** @description Array of damage resistance entries for this clothing. Each entry includes damage type (physical, energy, distortion, thermal, biochemical, stun), damage multiplier (lower = more resistant), and damage threshold. Only damage types with defined multipliers are included. */
-            resistances?:
-                | {
-                      /**
-                       * @description Damage type (physical, energy, distortion, thermal, biochemical, stun).
-                       * @example physical
-                       */
-                      type?: string | null;
-                      /**
-                       * Format: double
-                       * @description Damage multiplier for this resistance. Lower values mean more resistance.
-                       * @example 0.5
-                       */
-                      multiplier?: number | null;
-                      /**
-                       * Format: double
-                       * @description Damage threshold value for this resistance type.
-                       * @example 10
-                       */
-                      threshold?: number | null;
-                  }[]
-                | null;
+            resistances?: {
+                /**
+                 * @description Damage type (physical, energy, distortion, thermal, biochemical, stun).
+                 * @example physical
+                 */
+                type?: string | null;
+                /**
+                 * Format: double
+                 * @description Damage multiplier for this resistance. Lower values mean more resistance.
+                 * @example 0.5
+                 */
+                multiplier?: number | null;
+                /**
+                 * Format: double
+                 * @description Damage threshold value for this resistance type.
+                 * @example 10
+                 */
+                threshold?: number | null;
+            }[] | null;
             /**
              * Format: double
              * @deprecated
@@ -10230,13 +10214,11 @@ export interface components {
             time_to_complete_minutes?: number | null;
             star_systems?: string[] | null;
             variant_count?: number | null;
-            variants?:
-                | {
-                      /** Format: uuid */
-                      uuid?: string;
-                      title?: string | null;
-                  }[]
-                | null;
+            variants?: {
+                /** Format: uuid */
+                uuid?: string;
+                title?: string | null;
+            }[] | null;
             has_blueprints?: boolean;
             blueprints?: components["schemas"]["mission_index_blueprint"][] | null;
             has_chain?: boolean;
@@ -10270,16 +10252,14 @@ export interface components {
             available_in_prison?: boolean;
             not_for_release?: boolean;
             work_in_progress?: boolean;
-            reputation_gained?:
-                | {
-                      faction?: string | null;
-                      /** Format: uuid */
-                      faction_uuid?: string | null;
-                      scope?: string | null;
-                      tier?: string | null;
-                      amount?: number | null;
-                  }[]
-                | null;
+            reputation_gained?: {
+                faction?: string | null;
+                /** Format: uuid */
+                faction_uuid?: string | null;
+                scope?: string | null;
+                tier?: string | null;
+                amount?: number | null;
+            }[] | null;
             max_players_per_instance?: number | null;
             max_instances_per_player?: number | null;
             cooldown?: components["schemas"]["mission_cooldown"] | null;
@@ -10296,13 +10276,11 @@ export interface components {
             reaccept_after_abandoning?: boolean;
             reaccept_after_failing?: boolean;
             fail_if_became_criminal?: boolean;
-            hauling_summary?:
-                | {
-                      name?: string | null;
-                      min_amount?: number | null;
-                      max_amount?: number | null;
-                  }[]
-                | null;
+            hauling_summary?: {
+                name?: string | null;
+                min_amount?: number | null;
+                max_amount?: number | null;
+            }[] | null;
             reward_scope?: string | null;
             reputation_amount?: number | null;
             game_version?: string | null;
@@ -10429,17 +10407,15 @@ export interface components {
                 max_wanted_level?: number | null;
                 min_wanted_level?: number | null;
             } | null;
-            entity_spawns?:
-                | {
-                      tags?: string[] | null;
-                      amount?: number | null;
-                      weight?: number | null;
-                      group_name?: string | null;
-                      markup_tags?: string[] | null;
-                      negative_tags?: string[] | null;
-                      merged_tags?: string[];
-                  }[]
-                | null;
+            entity_spawns?: {
+                tags?: string[] | null;
+                amount?: number | null;
+                weight?: number | null;
+                group_name?: string | null;
+                markup_tags?: string[] | null;
+                negative_tags?: string[] | null;
+                merged_tags?: string[];
+            }[] | null;
             hidden_in_mobiglas?: boolean | null;
             notify_on_available?: boolean | null;
             reward_scope?: string | null;
@@ -10887,20 +10863,18 @@ export interface components {
             /** @description Game data version code. */
             version?: string | null;
             /** @description Images from external sources for this location. */
-            images?:
-                | {
-                      /** @description Image source identifier */
-                      source?: string | null;
-                      /** Format: uri */
-                      thumbnail_url?: string | null;
-                      thumbnail_width?: number | null;
-                      thumbnail_height?: number | null;
-                      /** Format: uri */
-                      original_url?: string | null;
-                      original_width?: number | null;
-                      original_height?: number | null;
-                  }[]
-                | null;
+            images?: {
+                /** @description Image source identifier */
+                source?: string | null;
+                /** Format: uri */
+                thumbnail_url?: string | null;
+                thumbnail_width?: number | null;
+                thumbnail_height?: number | null;
+                /** Format: uri */
+                original_url?: string | null;
+                original_width?: number | null;
+                original_height?: number | null;
+            }[] | null;
             /** @description Areas with boosted deposit spawn rates. Only included when requested via `include=resources`. */
             area_boosts?: components["schemas"]["area_boost"][] | null;
             /** @description Harvestable resource deposits grouped by extraction method. Only included when requested via `include=resources`. */
@@ -11129,21 +11103,17 @@ export interface components {
              */
             category_label?: string | null;
             /** @description Port compatibility list from ship data. */
-            compatible_types?:
-                | {
-                      /**
-                       * @description Compatible item type.
-                       * @example LifeSupportGenerator
-                       */
-                      type?: string | null;
-                      /** @description List of compatible sub-types for this port type. */
-                      sub_types?: string[] | null;
-                  }[]
-                | null;
+            compatible_types?: {
+                /**
+                 * @description Compatible item type.
+                 * @example LifeSupportGenerator
+                 */
+                type?: string | null;
+                /** @description List of compatible sub-types for this port type. */
+                sub_types?: string[] | null;
+            }[] | null;
             /** @description Equipped item details. On show routes: fully resolved from database (game_port_item). On index routes: lightweight summary from raw loadout JSON (game_port_item_summary). */
-            equipped_item?:
-                | (components["schemas"]["game_port_item"] | components["schemas"]["game_port_item_summary"])
-                | null;
+            equipped_item?: (components["schemas"]["game_port_item"] | components["schemas"]["game_port_item_summary"]) | null;
             /** @description Nested child ports (hardpoints). */
             ports?: components["schemas"]["game_vehicle_port"][] | null;
             /**
@@ -11208,45 +11178,43 @@ export interface components {
              */
             connection_count?: number;
             /** @description Hardpoints powered by this relay, grouped by equipment category. */
-            connected_hardpoints?:
-                | {
-                      /**
-                       * @description Equipment category label.
-                       * @example Weapons
-                       */
-                      category?: string;
-                      /**
-                       * @description Number of hardpoints in this group.
-                       * @example 4
-                       */
-                      count?: number;
-                      /** @description Individual hardpoints in this group. */
-                      items?: {
-                          /**
-                           * @description Hardpoint name.
-                           * @example hardpoint_shield_generator_l
-                           */
-                          hardpoint?: string;
-                          /**
-                           * @description Display name of the installed item.
-                           * @example Barbican
-                           */
-                          item_name?: string | null;
-                          /**
-                           * @description SC class name of the installed item.
-                           * @example SHLD_BASL_S03_Barbican_SCItem
-                           */
-                          class_name?: string | null;
-                          /**
-                           * @description Primary equipment type.
-                           * @example Shield
-                           */
-                          type?: string | null;
-                          /** @description Item UUID. */
-                          uuid?: string | null;
-                      }[];
-                  }[]
-                | null;
+            connected_hardpoints?: {
+                /**
+                 * @description Equipment category label.
+                 * @example Weapons
+                 */
+                category?: string;
+                /**
+                 * @description Number of hardpoints in this group.
+                 * @example 4
+                 */
+                count?: number;
+                /** @description Individual hardpoints in this group. */
+                items?: {
+                    /**
+                     * @description Hardpoint name.
+                     * @example hardpoint_shield_generator_l
+                     */
+                    hardpoint?: string;
+                    /**
+                     * @description Display name of the installed item.
+                     * @example Barbican
+                     */
+                    item_name?: string | null;
+                    /**
+                     * @description SC class name of the installed item.
+                     * @example SHLD_BASL_S03_Barbican_SCItem
+                     */
+                    class_name?: string | null;
+                    /**
+                     * @description Primary equipment type.
+                     * @example Shield
+                     */
+                    type?: string | null;
+                    /** @description Item UUID. */
+                    uuid?: string | null;
+                }[];
+            }[] | null;
         };
         /**
          * Relay Network
@@ -11261,20 +11229,18 @@ export interface components {
             /** @description Relay junction entries with their connected hardpoints. */
             relays?: components["schemas"]["vehicle_relay_entry"][] | null;
             /** @description Raw relay-to-hardpoint link edges. */
-            links?:
-                | {
-                      /**
-                       * @description Source hardpoint (relay).
-                       * @example hardpoint_relay_bridge
-                       */
-                      from?: string;
-                      /**
-                       * @description Target hardpoint.
-                       * @example hardpoint_controller_shield
-                       */
-                      to?: string;
-                  }[]
-                | null;
+            links?: {
+                /**
+                 * @description Source hardpoint (relay).
+                 * @example hardpoint_relay_bridge
+                 */
+                from?: string;
+                /**
+                 * @description Target hardpoint.
+                 * @example hardpoint_controller_shield
+                 */
+                to?: string;
+            }[] | null;
         };
         /**
          * Suit Storage
@@ -11389,43 +11355,41 @@ export interface components {
             /** @description Aggregated payload class names across all mounts. */
             payload_class_names?: string[] | null;
             /** @description Individual mount details for the turret. */
-            mounts?:
-                | {
-                      /**
-                       * @description Human-readable mount name.
-                       * @example turret_left
-                       */
-                      display_name?: string | null;
-                      /**
-                       * @description Hardpoint name of the mount.
-                       * @example turret_left
-                       */
-                      hardpoint_name?: string | null;
-                      /**
-                       * @description Mount type string (e.g. Turret.GunTurret).
-                       * @example Turret.GunTurret
-                       */
-                      mount_type?: string | null;
-                      /**
-                       * @description SC class name of the mount component.
-                       * @example Mount_Gimbal_S4
-                       */
-                      class_name?: string | null;
-                      /**
-                       * @description Mount hardpoint size.
-                       * @example 4
-                       */
-                      size?: number | null;
-                      /** @description Weapon sizes accepted by this mount. */
-                      weapon_sizes?: number[] | null;
-                      /** @description Payload sizes for this mount. */
-                      payload_sizes?: number[] | null;
-                      /** @description Payload types for this mount. */
-                      payload_types?: string[] | null;
-                      /** @description Payload class names equipped on this mount. */
-                      payload_class_names?: string[] | null;
-                  }[]
-                | null;
+            mounts?: {
+                /**
+                 * @description Human-readable mount name.
+                 * @example turret_left
+                 */
+                display_name?: string | null;
+                /**
+                 * @description Hardpoint name of the mount.
+                 * @example turret_left
+                 */
+                hardpoint_name?: string | null;
+                /**
+                 * @description Mount type string (e.g. Turret.GunTurret).
+                 * @example Turret.GunTurret
+                 */
+                mount_type?: string | null;
+                /**
+                 * @description SC class name of the mount component.
+                 * @example Mount_Gimbal_S4
+                 */
+                class_name?: string | null;
+                /**
+                 * @description Mount hardpoint size.
+                 * @example 4
+                 */
+                size?: number | null;
+                /** @description Weapon sizes accepted by this mount. */
+                weapon_sizes?: number[] | null;
+                /** @description Payload sizes for this mount. */
+                payload_sizes?: number[] | null;
+                /** @description Payload types for this mount. */
+                payload_types?: string[] | null;
+                /** @description Payload class names equipped on this mount. */
+                payload_class_names?: string[] | null;
+            }[] | null;
             /**
              * @description Aggregate DPS for the turret.
              * @example 166.7
@@ -11447,55 +11411,53 @@ export interface components {
              */
             is_pilot_slaveable?: boolean | null;
             /** @description Per-weapon breakdown with DPS and alpha data. */
-            weapons?:
-                | {
-                      /**
-                       * @description Weapon UUID.
-                       * @example 18b795c5-25f1-444a-86c0-b5edd7cf0118
-                       */
-                      uuid?: string | null;
-                      /**
-                       * @description SC class name of the weapon.
-                       * @example BEHR_LaserRepeater_PDC_S1
-                       */
-                      class_name?: string | null;
-                      /**
-                       * @description Human-readable weapon name.
-                       * @example M2C "Swarm"
-                       */
-                      name?: string | null;
-                      /**
-                       * Format: uri
-                       * @description API URL for the full item detail.
-                       */
-                      link?: string | null;
-                      /**
-                       * Format: uri
-                       * @description API Web URL for the full item detail.
-                       */
-                      web_url?: string | null;
-                      /**
-                       * @description Weapon DPS.
-                       * @example 166.7
-                       */
-                      dps?: number | null;
-                      /**
-                       * @description Weapon sustained DPS.
-                       * @example 74.2
-                       */
-                      sustained_dps?: number | null;
-                      /**
-                       * @description Weapon alpha damage.
-                       * @example 10
-                       */
-                      alpha?: number | null;
-                      /**
-                       * @description Whether this weapon can be slaved to pilot control.
-                       * @example false
-                       */
-                      is_pilot_slaveable?: boolean | null;
-                  }[]
-                | null;
+            weapons?: {
+                /**
+                 * @description Weapon UUID.
+                 * @example 18b795c5-25f1-444a-86c0-b5edd7cf0118
+                 */
+                uuid?: string | null;
+                /**
+                 * @description SC class name of the weapon.
+                 * @example BEHR_LaserRepeater_PDC_S1
+                 */
+                class_name?: string | null;
+                /**
+                 * @description Human-readable weapon name.
+                 * @example M2C "Swarm"
+                 */
+                name?: string | null;
+                /**
+                 * Format: uri
+                 * @description API URL for the full item detail.
+                 */
+                link?: string | null;
+                /**
+                 * Format: uri
+                 * @description API Web URL for the full item detail.
+                 */
+                web_url?: string | null;
+                /**
+                 * @description Weapon DPS.
+                 * @example 166.7
+                 */
+                dps?: number | null;
+                /**
+                 * @description Weapon sustained DPS.
+                 * @example 74.2
+                 */
+                sustained_dps?: number | null;
+                /**
+                 * @description Weapon alpha damage.
+                 * @example 10
+                 */
+                alpha?: number | null;
+                /**
+                 * @description Whether this weapon can be slaved to pilot control.
+                 * @example false
+                 */
+                is_pilot_slaveable?: boolean | null;
+            }[] | null;
             /** @description Game version code for this data. */
             version?: string | null;
         };
@@ -12318,14 +12280,12 @@ export interface components {
                     dps_total?: number | null;
                     sustained_dps_total?: number | null;
                     alpha_total?: number | null;
-                    weapons?:
-                        | {
-                              name?: string | null;
-                              dps?: number | null;
-                              sustained_dps?: number | null;
-                              alpha?: number | null;
-                          }[]
-                        | null;
+                    weapons?: {
+                        name?: string | null;
+                        dps?: number | null;
+                        sustained_dps?: number | null;
+                        alpha?: number | null;
+                    }[] | null;
                 } | null;
                 /** @description Missile statistics. */
                 missiles?: {
@@ -12529,14 +12489,9 @@ export interface components {
              */
             role?: string | null;
             /** @description Vehicle description from raw game data, or a translation object with localized strings. */
-            game_description?:
-                | (
-                      | string
-                      | {
-                            [key: string]: string;
-                        }
-                  )
-                | null;
+            game_description?: (string | {
+                [key: string]: string;
+            }) | null;
             /** @example https://example.com/vehicles/uuid */
             web_url?: string | null;
             /** @example https://api.example.com/vehicles/uuid */
@@ -12575,21 +12530,19 @@ export interface components {
                 rental?: components["schemas"]["uex_price"][];
             };
             /** @description Images from external sources for this vehicle. */
-            images?:
-                | {
-                      /**
-                       * @description Image source identifier
-                       * @example starcitizen.tools
-                       */
-                      source?: string;
-                      thumbnail_url?: string | null;
-                      thumbnail_width?: number | null;
-                      thumbnail_height?: number | null;
-                      original_url?: string | null;
-                      original_width?: number | null;
-                      original_height?: number | null;
-                  }[]
-                | null;
+            images?: {
+                /**
+                 * @description Image source identifier
+                 * @example starcitizen.tools
+                 */
+                source?: string;
+                thumbnail_url?: string | null;
+                thumbnail_width?: number | null;
+                thumbnail_height?: number | null;
+                original_url?: string | null;
+                original_width?: number | null;
+                original_height?: number | null;
+            }[] | null;
             /** @description Timestamp of last data update. */
             updated_at?: string;
             /**
@@ -12991,49 +12944,43 @@ export interface components {
              */
             last_modified?: string;
             /** @description Tags associated with the image when the `tags` relation is loaded. */
-            tags?:
-                | {
-                      /** @description Tag name. */
-                      name?: string;
-                      /** @description Translated tag name. */
-                      translated_name?: string | null;
-                      /** @description Number of images sharing this tag. */
-                      images_count?: number;
-                  }[]
-                | null;
+            tags?: {
+                /** @description Tag name. */
+                name?: string;
+                /** @description Translated tag name. */
+                translated_name?: string | null;
+                /** @description Number of images sharing this tag. */
+                images_count?: number;
+            }[] | null;
             /**
              * Format: uri
              * @description API URL to find visually similar images.
              */
             similar_url?: string;
             /** @description Comm-Links that reference this image, included when the `commLinks` relation is loaded. */
-            comm_links?:
-                | {
-                      /** @description CIG identifier of the Comm-Link */
-                      id?: number;
-                      /** @description Title of the Comm-Link */
-                      title?: string;
-                      /**
-                       * Format: uri
-                       * @description API URL for this Comm-Link resource.
-                       */
-                      api_url?: string;
-                      /**
-                       * Format: uri
-                       * @description Public web URL for this Comm-Link.
-                       */
-                      web_url?: string;
-                  }[]
-                | null;
+            comm_links?: {
+                /** @description CIG identifier of the Comm-Link */
+                id?: number;
+                /** @description Title of the Comm-Link */
+                title?: string;
+                /**
+                 * Format: uri
+                 * @description API URL for this Comm-Link resource.
+                 */
+                api_url?: string;
+                /**
+                 * Format: uri
+                 * @description Public web URL for this Comm-Link.
+                 */
+                web_url?: string;
+            }[] | null;
             /** @description Duplicate images that share the same base image, included when the `duplicates` relation is loaded. */
-            duplicates?:
-                | {
-                      /** @description Internal database ID of the duplicate image */
-                      id?: number;
-                      /** @description File name of the duplicate image */
-                      name?: string;
-                  }[]
-                | null;
+            duplicates?: {
+                /** @description Internal database ID of the duplicate image */
+                id?: number;
+                /** @description File name of the duplicate image */
+                name?: string;
+            }[] | null;
             /** @description The original image this is a duplicate of, included when the `baseImage` relation is loaded. */
             base_image?: {
                 /** @description Internal database ID of the base image */
