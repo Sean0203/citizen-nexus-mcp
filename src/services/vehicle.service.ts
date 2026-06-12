@@ -5,12 +5,19 @@ import { createLogger } from "../logging/logger.js";
 
 const log = createLogger("vehicle.service");
 
-const VEHICLE_MAX_SEARCH_RESULTS = 5;
+const VEHICLE_MAX_SEARCH_RESULTS = 10;
 
 const FUSE_OPTIONS: IFuseOptions<VehicleWiki> = {
-    keys: ["name", "shipmatrix_name", "slug", "class_name"],
-    threshold: 0.4, // Light typos
-    ignoreLocation: true, // match anywhere in the string, not just the start
+    keys: [
+        { name: "name", weight: 0.2 },
+        { name: "game_name", weight: 0.2 },
+        { name: "slug", weight: 5 }
+    ],
+    threshold: 0.3, // Light typos,
+    includeMatches: true,
+    includeScore: true,
+    ignoreLocation: true,
+    ignoreDiacritics: true,
     minMatchCharLength: 2
 };
 
@@ -33,5 +40,6 @@ export class VehicleService {
         const items = fuse.search(query.trim(), { limit: VEHICLE_MAX_SEARCH_RESULTS }).map((res) => res.item);
         log.debug({ event: "search", query, results: items.length });
         return items;
+        // return items.map((i) => ({ v: i.item, score: i }));
     }
 }
