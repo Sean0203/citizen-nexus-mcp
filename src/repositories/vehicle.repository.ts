@@ -6,8 +6,6 @@ import { createLogger } from "../logging/logger.js";
 
 const log = createLogger("vehicle.repository");
 
-/** Wraps the wiki vehicle data. Returns the lean VehicleWiki shape and knows
- *  nothing about MCP. */
 export class VehicleRepository {
     constructor(private cache: TtlCache) {}
 

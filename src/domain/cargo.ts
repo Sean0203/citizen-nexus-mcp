@@ -9,6 +9,7 @@ interface Vec3 {
     l: number;
 }
 
+/** Record of the scu containers metric dimensions. */
 export const SCU_BOX: Record<ScuSize, Vec3> = {
     1: { w: 1.25, h: 1.25, l: 1.25 },
     2: { w: 1.25, h: 1.25, l: 2.5 },

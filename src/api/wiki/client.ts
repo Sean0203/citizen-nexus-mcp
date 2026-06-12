@@ -89,11 +89,14 @@ export async function wikiGetList<T>(path: string, params: WikiListParams = {}):
 
 /**
  * GET every page of a wiki list endpoint and return the concatenated items.
- * Pages are fetched sequentially (to stay polite and well within rate limits)
- * at the maximum page size, looping until meta.current_page reaches
- * meta.last_page. If meta is absent, the first page is treated as complete.
+ * Pages are fetched sequentially at the maximum page size, looping until
+ * meta.current_page reaches meta.last_page. If meta is absent, the first page
+ * is treated as complete.
  */
-export async function wikiGetAll<T>(path: string, params: Omit<WikiListParams, "page" | "pageSize"> = {}): Promise<T[]> {
+export async function wikiGetAll<T>(
+    path: string,
+    params: Omit<WikiListParams, "page" | "pageSize"> = {}
+): Promise<T[]> {
     const all: T[] = [];
 
     const first = await wikiGetList<T>(path, { ...params, page: 1, pageSize: MAX_PAGE_SIZE });

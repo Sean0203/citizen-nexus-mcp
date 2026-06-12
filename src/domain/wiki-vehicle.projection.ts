@@ -13,8 +13,8 @@ interface Localized {
 }
 
 /**
- * The subset of a raw game_vehicle we read, typed from the live API response.
- * We map from this local shape rather than the generated schema type because
+ * Subset of a raw game_vehicle we read, typed from the live API response.
+ * Mapping from this local shape rather than the generated schema type because
  * the published spec is not exact for some nested objects (for example
  * cargo_limits is documented as min/max but is returned as min_size/max_size).
  */
