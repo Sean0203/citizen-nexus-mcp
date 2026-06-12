@@ -1,6 +1,9 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { VehicleService } from "../services/vehicle.service.js";
+import { createLogger } from "../logging/logger.js";
+
+const log = createLogger("vehicle.tools");
 
 function json(data: unknown) {
     return {
@@ -23,6 +26,7 @@ export function registerVehicleTools(server: McpServer, service: VehicleService)
         },
         async ({ query }) => {
             const results = await service.searchVehicles(query);
+            log.info({ event: "search_vehicles", query, results_returned: results.length });
             if (results.length === 0)
                 return {
                     content: [

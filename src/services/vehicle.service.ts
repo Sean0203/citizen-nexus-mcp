@@ -1,6 +1,9 @@
 import type { VehicleRepository } from "../repositories/vehicle.repository.js";
 import type { VehicleWiki } from "../domain/wiki-vehicle.models.js";
 import Fuse, { IFuseOptions } from "fuse.js";
+import { createLogger } from "../logging/logger.js";
+
+const log = createLogger("vehicle.service");
 
 const VEHICLE_MAX_SEARCH_RESULTS = 5;
 
@@ -19,12 +22,16 @@ export class VehicleService {
 
     private async getIndex(): Promise<Fuse<VehicleWiki>> {
         if (this.fuse) return this.fuse;
-        this.fuse = new Fuse(await this.repo.getAllVehiclesWiki(), FUSE_OPTIONS);
+        const vehicles = await this.repo.getAllVehiclesWiki();
+        this.fuse = new Fuse(vehicles, FUSE_OPTIONS);
+        log.info({ event: "index_built", count: vehicles.length });
         return this.fuse;
     }
 
     async searchVehicles(query: string): Promise<VehicleWiki[]> {
         const fuse = await this.getIndex();
-        return fuse.search(query.trim(), { limit: VEHICLE_MAX_SEARCH_RESULTS }).map((res) => res.item);
+        const items = fuse.search(query.trim(), { limit: VEHICLE_MAX_SEARCH_RESULTS }).map((res) => res.item);
+        log.debug({ event: "search", query, results: items.length });
+        return items;
     }
 }

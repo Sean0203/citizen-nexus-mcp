@@ -13,8 +13,11 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { createContainer } from "./container.js";
 import { registerVehicleTools } from "./tools/vehicle.tools.js";
+import { attachMcpServer } from "./logging/logger.js";
 
-const server = new McpServer({ name: "citizen-nexus", version: "0.1.0" });
+// Declaring the logging capability lets the client set a level and receive
+// notifications/message logs.
+const server = new McpServer({ name: "citizen-nexus", version: "0.1.0" }, { capabilities: { logging: {} } });
 const container = createContainer();
 
 registerVehicleTools(server, container.vehicleService);
@@ -22,7 +25,8 @@ registerVehicleTools(server, container.vehicleService);
 async function main(): Promise<void> {
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    // stdout is reserved for JSON-RPC. Log only to stderr.
+    // Client is connected, deliver logs to it. Logs before this point go to stderr only.
+    attachMcpServer(server);
     console.warn("[citizen-nexus] ready (stdio)");
 }
 

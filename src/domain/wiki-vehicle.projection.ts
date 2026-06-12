@@ -1,5 +1,9 @@
 import type { components } from "../api/wiki/schema.js";
-import type { CargoGrid, PriceEntry, ManufacturerWiki, VehicleWiki } from "./wiki-vehicle.models.js";
+import type { CargoGrid, ManufacturerWiki, PriceEntry, VehicleWiki } from "./wiki-vehicle.models.js";
+import { metricToSCUCargoGrid } from "./cargo.js";
+import { createLogger } from "../logging/logger.js";
+
+const log = createLogger("wiki-vehicle.projection");
 
 type GameVehicle = components["schemas"]["game_vehicle"];
 
@@ -59,16 +63,15 @@ interface Raw {
 const en = (l: Localized | null | undefined): string | null => l?.en_EN ?? null;
 
 /**
- * Project a raw wiki game_vehicle into the lean VehicleWiki kept in the cache.
- * Localized fields are flattened to en_EN; the heavy combat, power, signature,
- * and hardpoint data is dropped. This is the single place raw wiki fields are
- * read.
+ * Project a raw game_vehicle type into a VehicleWiki type.
+ * Localized fields are flattened to en_EN.
  */
 export function toVehicleWiki(gv: GameVehicle): VehicleWiki | null {
     const r = gv as unknown as Raw;
 
     // Type guard for string types
     if (!(r.uuid && r.name)) {
+        log.debug({ event: "toVehicleWiki", message: "found vehicle with invalid state" });
         return null;
     }
 
@@ -104,7 +107,7 @@ export function toVehicleWiki(gv: GameVehicle): VehicleWiki | null {
         cargo_capacity: r.cargo_capacity ?? null,
         ore_capacity: r.ore_capacity ?? null,
         max_scu_box: r.cargo_limits?.min_scu_box ?? null,
-        cargo_grids: r.cargo_grids ?? [],
+        cargo_grids: r.cargo_grids?.map(metricToSCUCargoGrid) ?? [],
 
         quantum: {
             quantum_speed: r.quantum?.quantum_speed ?? null,
