@@ -3,24 +3,40 @@ import { toVehicleWiki } from "../domain/wiki-vehicle.projection.js";
 import type { VehicleWiki } from "../domain/wiki-vehicle.models.js";
 import { HOUR, TtlCache } from "./cache.js";
 import { createLogger } from "../logging/logger.js";
+import Fuse, { IFuseOptions } from "fuse.js";
 
 const log = createLogger("vehicle.repository");
+
+/** TTL for the vehicle data and index cache entries. */
+const VEHICLE_TTL = 24 * HOUR;
+
+const VEHICLE_DATA_KEY = "vehicles:wiki";
+const VEHICLE_INDEX_KEY = "vehicles:wiki:index";
+
+/** Fuzzy-search tuning for the vehicle catalogue. */
+const VEHICLE_FUSE_OPTIONS: IFuseOptions<VehicleWiki> = {
+    keys: ["name", "game_name", "slug"],
+    threshold: 0.3, // Light typos
+    includeMatches: true,
+    includeScore: true,
+    ignoreLocation: true,
+    ignoreDiacritics: true,
+    minMatchCharLength: 2
+};
 
 export class VehicleRepository {
     constructor(private cache: TtlCache) {}
 
-    /** Pre-loads the long-lived vehicle data into the cache at startup. */
+    /** Pre-loads long-lived data into the cache. Meant to be called once at startup. */
     async warm(): Promise<void> {
         log.info({ event: "cache_warm_start" });
-        await Promise.all([this.getAllVehiclesWiki()]);
+        await Promise.all([this.getVehicleIndex()]);
         log.info({ event: "cache_warm_done" });
     }
 
-    /** Get the full in-game flight-ready vehicle catalogue from the wiki, projected to a lean
-     *  VehicleWiki shape and cached for 24 hours. The raw game_vehicle objects
-     *  are discarded after projection so they are never retained. */
+    /** Flight-ready vehicle catalogue from the wiki, projected and cached for 24h. */
     getAllVehiclesWiki(): Promise<VehicleWiki[]> {
-        return this.cache.get("vehicles:wiki", 24 * HOUR, async () => {
+        return this.cache.get(VEHICLE_DATA_KEY, VEHICLE_TTL, async () => {
             const startedAt = Date.now();
             const raw = await fetchVehiclesWiki();
             const vehicles = raw
@@ -33,7 +49,18 @@ export class VehicleRepository {
                 kept: vehicles.length,
                 ms: Date.now() - startedAt
             });
+            this.cache.clear(VEHICLE_INDEX_KEY);
             return vehicles;
+        });
+    }
+
+    /** Fuzzy-search index over the flight-ready vehicle catalogue, cached for 24h. */
+    getVehicleIndex(): Promise<Fuse<VehicleWiki>> {
+        return this.cache.get(VEHICLE_INDEX_KEY, VEHICLE_TTL, async () => {
+            const vehicles = await this.getAllVehiclesWiki();
+            const index = new Fuse(vehicles, VEHICLE_FUSE_OPTIONS);
+            log.info({ event: "vehicle_index_built", count: vehicles.length });
+            return index;
         });
     }
 }

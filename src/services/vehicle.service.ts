@@ -1,25 +1,14 @@
 import type { VehicleRepository } from "../repositories/vehicle.repository.js";
 import type { VehicleWiki } from "../domain/wiki-vehicle.models.js";
-import Fuse, { IFuseOptions, FuseResult, FuseResultMatch } from "fuse.js";
+import { FuseResult, FuseResultMatch } from "fuse.js";
 import { createLogger } from "../logging/logger.js";
 
 const log = createLogger("vehicle.service");
 
 const VEHICLE_MAX_SEARCH_RESULTS = 10;
-
-const FUSE_OPTIONS: IFuseOptions<VehicleWiki> = {
-    keys: ["name", "game_name", "slug"],
-    threshold: 0.3, // Light typos,
-    includeMatches: true,
-    includeScore: true,
-    ignoreLocation: true,
-    ignoreDiacritics: true,
-    minMatchCharLength: 2
-};
-
 const SCORE_EPSILON = 1e-6;
 
-/** Whole-item coverage: total matched characters across all matched fields over total field length. */
+/** Whole-item coverage: matched characters over total field length, across all matched fields. */
 function itemCoverage(matches: readonly FuseResultMatch[]): number {
     let matched = 0;
     let total = 0;
@@ -43,24 +32,14 @@ function compareResults(a: FuseResult<VehicleWiki>, b: FuseResult<VehicleWiki>):
     return (a.item.slug?.length ?? 0) - (b.item.slug?.length ?? 0); // deterministic fallback
 }
 
-/** Business logic for vehicles: fuzzy name search over the cached wiki data. */
+/** Business logic for vehicles: fuzzy name search over the repository's cached index. */
 export class VehicleService {
-    private fuse: Fuse<VehicleWiki> | null = null;
-
     constructor(private repo: VehicleRepository) {}
 
-    private async getIndex(): Promise<Fuse<VehicleWiki>> {
-        if (this.fuse) return this.fuse;
-        const vehicles = await this.repo.getAllVehiclesWiki();
-        this.fuse = new Fuse(vehicles, FUSE_OPTIONS);
-        log.info({ event: "index_built", count: vehicles.length });
-        return this.fuse;
-    }
-
-    /** Fuzzy-search vehicles, re-sorting score ties by match coverage before truncating to the result limit. */
+    /** Fuzzy-search vehicles, breaking score ties by match coverage before truncating to the limit. */
     async searchVehicles(query: string): Promise<VehicleWiki[]> {
-        const fuse = await this.getIndex();
-        const results = fuse.search(query.trim());
+        const index = await this.repo.getVehicleIndex();
+        const results = index.search(query.trim());
         const items = results
             .sort(compareResults)
             .slice(0, VEHICLE_MAX_SEARCH_RESULTS)
