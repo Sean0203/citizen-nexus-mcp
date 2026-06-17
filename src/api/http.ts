@@ -8,7 +8,16 @@
  */
 
 /** Base class for every API client error, so callers can catch them uniformly. */
-export class ApiError extends Error {}
+export class ApiError extends Error {
+    /** HTTP status code, when the failure was a non-2xx response. */
+    status?: number;
+}
+
+/** Default request timeout. Overridable per call via HttpGetOptions.timeoutMs. */
+const DEFAULT_TIMEOUT_MS = 15_000;
+
+/** Identifies this client to community APIs. Update the URL to the published repo. */
+const USER_AGENT = "citizen-nexus-mcp/0.1.0 (+https://github.com/OWNER/citizen-nexus-mcp)";
 
 export interface HttpGetOptions {
     /** Absolute base URL, with or without a trailing slash. */
@@ -21,18 +30,20 @@ export interface HttpGetOptions {
      * (URLSearchParams percent-encodes the brackets, which servers decode back).
      */
     query?: Record<string, string | number | boolean | undefined>;
-    /** Extra request headers, for example an Authorization header. */
+    /** Extra request headers, for example an Authorization header. Overrides defaults. */
     headers?: Record<string, string>;
     /** Concrete error class to throw on failure. Defaults to ApiError. */
     errorType?: new (message: string) => ApiError;
+    timeoutMs?: number;
 }
 
 /**
  * Issues a GET and returns the parsed JSON body as `unknown`.
- * Throws `errorType` on a network failure, a non-2xx response, or invalid JSON.
+ * Throws `errorType` on a network failure, a timeout, a non-2xx response, or invalid JSON.
+ * On a non-2xx response the thrown error carries the HTTP `status`.
  */
 export async function httpGetJson(options: HttpGetOptions): Promise<unknown> {
-    const { baseUrl, path, query, headers, errorType = ApiError } = options;
+    const { baseUrl, path, query, headers, errorType = ApiError, timeoutMs = DEFAULT_TIMEOUT_MS } = options;
 
     const base = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
     const url = new URL(path.replace(/^\//, ""), base);
@@ -44,13 +55,20 @@ export async function httpGetJson(options: HttpGetOptions): Promise<unknown> {
 
     let res: Response;
     try {
-        res = await fetch(url, headers ? { headers } : undefined);
+        res = await fetch(url, {
+            headers: { "User-Agent": USER_AGENT, ...headers },
+            signal: AbortSignal.timeout(timeoutMs)
+        });
     } catch (cause) {
-        throw new errorType(`Network request to ${url.pathname} failed: ${String(cause)}`);
+        const timedOut = cause instanceof Error && cause.name === "TimeoutError";
+        const reason = timedOut ? `timed out after ${timeoutMs}ms` : `failed: ${String(cause)}`;
+        throw new errorType(`Network request to ${url.pathname} ${reason}`);
     }
 
     if (!res.ok) {
-        throw new errorType(`Request failed: ${res.status} ${res.statusText} (${url.pathname})`);
+        const err = new errorType(`Request failed: ${res.status} ${res.statusText} (${url.pathname})`);
+        err.status = res.status;
+        throw err;
     }
 
     try {

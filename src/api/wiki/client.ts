@@ -18,6 +18,13 @@ type PaginationLinks = components["schemas"]["pagination_links"];
 /** Largest page the API allows. Used to minimise the number of round trips. */
 const MAX_PAGE_SIZE = 200;
 
+/** Retry budget and backoff for 429 (rate-limit) responses. The wiki limits
+ *  search endpoints to 60 req/min; this is cheap insurance against bursts. */
+const MAX_RETRIES_429 = 3;
+const RETRY_BACKOFF_MS = 1_000;
+
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
 export class WikiApiError extends ApiError {}
 
 function getBaseUrl(): string {
@@ -71,14 +78,25 @@ function toQuery(params: WikiListParams): Record<string, string | number | undef
     return query;
 }
 
-/** GET a single page of a wiki list endpoint and return its unwrapped envelope. */
+/** GET a single page of a wiki list endpoint and return its unwrapped envelope.
+ *  Retries with linear backoff on HTTP 429 up to MAX_RETRIES_429 times. */
 export async function wikiGetList<T>(path: string, params: WikiListParams = {}): Promise<WikiList<T>> {
-    const body = await httpGetJson({
-        baseUrl: getBaseUrl(),
-        path,
-        query: toQuery(params),
-        errorType: WikiApiError
-    });
+    let body: unknown;
+    for (let attempt = 0; ; attempt++) {
+        try {
+            body = await httpGetJson({
+                baseUrl: getBaseUrl(),
+                path,
+                query: toQuery(params),
+                errorType: WikiApiError
+            });
+            break;
+        } catch (err) {
+            const rateLimited = err instanceof WikiApiError && err.status === 429;
+            if (!rateLimited || attempt >= MAX_RETRIES_429) throw err;
+            await sleep(RETRY_BACKOFF_MS * (attempt + 1));
+        }
+    }
 
     const parsed = listEnvelopeSchema.safeParse(body);
     if (!parsed.success) throw new WikiApiError(`Unexpected list envelope from ${path}`);

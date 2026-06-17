@@ -2,14 +2,9 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { VehicleService } from "../services/vehicle.service.js";
 import { createLogger } from "../logging/logger.js";
+import { json, text, withToolErrorHandling } from "./helpers.js";
 
 const log = createLogger("vehicle.tools");
-
-function json(data: unknown) {
-    return {
-        content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }]
-    };
-}
 
 export function registerVehicleTools(server: McpServer, service: VehicleService): void {
     server.registerTool(
@@ -24,19 +19,11 @@ export function registerVehicleTools(server: McpServer, service: VehicleService)
                 query: z.string().describe("Full or partial vehicle name, e.g. 'Constellation'")
             }
         },
-        async ({ query }) => {
+        withToolErrorHandling("search_vehicles", async ({ query }) => {
             const results = await service.searchVehicles(query);
             log.info({ event: "search_vehicles", query, results_returned: results.length });
-            if (results.length === 0)
-                return {
-                    content: [
-                        {
-                            type: "text",
-                            text: `No vehicles matched "${query}".`
-                        }
-                    ]
-                };
+            if (results.length === 0) return text(`No vehicles matched "${query}".`);
             return json(results);
-        }
+        })
     );
 }
