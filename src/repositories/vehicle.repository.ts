@@ -2,6 +2,7 @@ import { getAllVehicles as fetchVehiclesWiki } from "../api/wiki/client.js";
 import { toVehicleWiki } from "../domain/wiki-vehicle.projection.js";
 import type { VehicleWiki } from "../domain/wiki-vehicle.models.js";
 import { HOUR, TtlCache } from "./cache.js";
+import type { Warmable } from "./warmable.js";
 import { createLogger } from "../logging/logger.js";
 import Fuse, { IFuseOptions } from "fuse.js";
 
@@ -24,7 +25,7 @@ const VEHICLE_FUSE_OPTIONS: IFuseOptions<VehicleWiki> = {
     minMatchCharLength: 2
 };
 
-export class VehicleRepository {
+export class VehicleRepository implements Warmable {
     constructor(private cache: TtlCache) {}
 
     /** Pre-loads long-lived data into the cache. Meant to be called once at startup. */
