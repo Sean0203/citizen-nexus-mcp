@@ -45,7 +45,7 @@ export function metricToSCUCargoGrid(gridMetric: CargoGrid): CargoGrid {
 
 function fitsWithinSCUGrid(boxSize: ScuSize, scuWidth: number, scuHeight: number, scuLength: number): boolean {
     const box = SCU_BOX[boxSize];
-    let boxDimsSorted = [box.w, box.h, box.l].map((bd) => bd / SCU_BOX[1].w).sort((a, b) => a - b);
-    let gridDimsSorted = [scuWidth, scuHeight, scuLength].sort((a, b) => a - b);
+    const boxDimsSorted = [box.w, box.h, box.l].map((bd) => bd / SCU_BOX[1].w).sort((a, b) => a - b);
+    const gridDimsSorted = [scuWidth, scuHeight, scuLength].sort((a, b) => a - b);
     return boxDimsSorted.every((bd, i) => bd <= gridDimsSorted[i]);
 }
