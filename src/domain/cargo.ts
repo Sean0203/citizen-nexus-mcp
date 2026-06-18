@@ -21,7 +21,8 @@ export const SCU_BOX: Record<ScuSize, Vec3> = {
 };
 
 /** Converts the metric values of a cargo grid object to scu-relative values, and calculates the correct max_scu_box
- * value for the grid, which is incorrect for a lot of the raw data.  */
+ * value for the grid, which seems incorrect for a lot of the raw data. Does not override the volume field since the scu
+ * field already exists. */
 export function metricToSCUCargoGrid(gridMetric: CargoGrid): CargoGrid {
     const scuWidth = gridMetric.width / SCU_BOX[1].w;
     const scuHeight = gridMetric.height / SCU_BOX[1].h;

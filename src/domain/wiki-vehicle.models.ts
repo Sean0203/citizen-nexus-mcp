@@ -21,9 +21,9 @@ export interface CargoGrid {
     length: number;
     volume: number;
     scu: number;
-    open: boolean | null;
+    open: boolean | null; // Seems always false for now
     external: boolean | null;
-    closed: boolean | null;
+    closed: boolean | null; // Seems always false for now
     max_scu_box: number;
 }
 
