@@ -15,7 +15,8 @@
         "build": "tsc",
         "start": "node dist/index.js",
         "start:inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
-        "dev": "tsx watch src/index.ts",
+        "dev:inspect": "npx @modelcontextprotocol/inspector npx tsx --inspect-brk=9230 src/index.ts",
+        "dev:watch": "tsx watch src/index.ts",
         "gen:types:uex": "openapi-typescript swagger-doc/uex-api-v2.1.json -o src/api/uex/schema.ts",
         "gen:types:wiki": "openapi-typescript swagger-doc/starcitizen-wiki-openapi.yaml -o src/api/wiki/schema.ts",
         "gen:types": "npm run gen:types:uex && npm run gen:types:wiki"
