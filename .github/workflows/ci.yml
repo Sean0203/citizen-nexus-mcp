@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout.
         uses: actions/checkout@v7
 
       - name: Use Node v24.16.0
