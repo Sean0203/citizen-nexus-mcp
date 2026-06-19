@@ -1,12 +1,12 @@
 # Citizen Nexus
 
-***
+---
 
 An MCP server that fetches data from UEX and the Star Citizen wiki.
 
 ## Description
 
-***
+---
 
 This project is an [MCP server](https://modelcontextprotocol.io/docs/getting-started/intro) that gathers data
 from [UEX](https://uexcorp.space/) and the [Star Citizen Wiki](https://starcitizen.tools/) via their respective APIs. This allows new and veteran
@@ -20,25 +20,24 @@ favorite LLM. You can plug it into any LLM client that supports MCP servers, lik
 Description
 
 **Parameters:**
+
 - `parameter_name` (type, optional/required): parameter description
 
 ## Data fetched from sources
-
-
 
 ## Requirements
 
 ## Installation
 
-***
+---
 
 ## Usage
 
-***
+---
 
 ## Support this project
 
-***
+---
 
 If you find this tool useful and feel generous, you can support me on Ko-fi!
 
@@ -46,7 +45,7 @@ If you find this tool useful and feel generous, you can support me on Ko-fi!
 
 ## Acknowledgements and disclaimers
 
-***
+---
 
 This project uses data from the following community APIs:
 
@@ -66,5 +65,3 @@ Cloud Imperium Rights Ltd.**
 **Commercial use is not permitted under
 the [RSI Fandom FAQ](https://support.robertsspaceindustries.com/hc/en-us/articles/360006895793-Star-Citizen-Fankit-and-Fandom-FAQ).
 **
-
-

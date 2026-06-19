@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { ApiError, httpGetJson } from "../http.js";
 
-// Read env lazily, not at module load. The value may come from the MCP client
-// config (injected into process.env when the client spawns the server) or from
-// a local .env file (loaded by dotenv in the entry point). Reading inside the
+// Read env lazily. The value may come from the MCP client
+// config or from a local .env file (loaded by dotenv in the entry point). Reading inside the
 // request guarantees it is present regardless of import/load order.
+// The client config takes priority over the .env file.
 function getBaseUrl(): string {
     return process.env.UEX_BASE_URL ?? "https://api.uexcorp.uk/2.0";
 }
@@ -19,8 +19,7 @@ function getApiKey(): string {
     return bearer;
 }
 
-// UEX 2.0 wraps every payload in this envelope. Confirm against a live
-// response and adjust if the shape differs.
+// UEX 2.0 wraps every payload in this envelope.
 const envelopeSchema = z.object({
     status: z.string(),
     http_code: z.number().optional(),
