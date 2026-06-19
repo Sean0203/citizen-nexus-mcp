@@ -1,3 +1,5 @@
+import pkg from "../../package.json" with { type: "json" };
+
 /**
  * Shared low-level HTTP transport for all API clients.
  *
@@ -17,12 +19,12 @@ export class ApiError extends Error {
 const DEFAULT_TIMEOUT_MS = 15_000;
 
 /** Identifies this client to community APIs. Update the URL to the published repo. */
-const USER_AGENT = "citizen-nexus-mcp/0.1.0 (+https://github.com/Sean0203/citizen-nexus-mcp)";
+const USER_AGENT = `citizen-nexus-mcp/${pkg.version}(+https://github.com/Sean0203/citizen-nexus-mcp)`;
 
 export interface HttpGetOptions {
-    /** Absolute base URL, with or without a trailing slash. */
+    /** Absolute base URL. A trailing slash is optional. */
     baseUrl: string;
-    /** Endpoint path. A leading slash is optional; it is resolved against baseUrl. */
+    /** Endpoint path. A leading slash is optional. */
     path: string;
     /**
      * Query parameters. Undefined values are skipped. Keys are written verbatim,
@@ -30,9 +32,9 @@ export interface HttpGetOptions {
      * (URLSearchParams percent-encodes the brackets, which servers decode back).
      */
     query?: Record<string, string | number | boolean | undefined>;
-    /** Extra request headers, for example an Authorization header. Overrides defaults. */
+    /** Extra request headers. Overrides defaults. */
     headers?: Record<string, string>;
-    /** Concrete error class to throw on failure. Defaults to ApiError. */
+    /** Concrete error class to throw on failure. Defaults to `ApiError`. */
     errorType?: new (message: string) => ApiError;
     timeoutMs?: number;
 }

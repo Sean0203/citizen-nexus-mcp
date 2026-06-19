@@ -132,7 +132,7 @@ describe("httpGetJson", () => {
 
             const err = await httpGetJson({ baseUrl: "https://api.test", path: "v" }).catch((e) => e);
             expect(err).toBeInstanceOf(ApiError);
-            expect(err.status).toBe(429);
+            expect((err as ApiError).status).toBe(429);
         });
 
         it("should throw on invalid JSON in a 2xx response", async () => {
@@ -149,7 +149,7 @@ describe("httpGetJson", () => {
                 (e) => e
             );
             expect(err).toBeInstanceOf(WikiError);
-            expect(err.status).toBe(500);
+            expect((err as WikiError).status).toBe(500);
         });
     });
 });

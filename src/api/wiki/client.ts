@@ -15,11 +15,11 @@ export type GameVehicle = components["schemas"]["game_vehicle"];
 type PaginationMeta = components["schemas"]["pagination_meta"];
 type PaginationLinks = components["schemas"]["pagination_links"];
 
-/** Largest page the API allows. Used to minimise the number of round trips. */
+/** Largest page the API allows. Used to minimize the number of round trips. */
 const MAX_PAGE_SIZE = 200;
 
 /** Retry budget and backoff for 429 (rate-limit) responses. The wiki limits
- *  search endpoints to 60 req/min; this is cheap insurance against bursts. */
+ *  search endpoints to 60 req/min. */
 const MAX_RETRIES_429 = 3;
 const RETRY_BACKOFF_MS = 1_000;
 

@@ -10,9 +10,9 @@
         "citizen-nexus-mcp-server": "dist/index.js"
     },
     "scripts": {
+        "gen:types": "npm run gen:types:*",
         "gen:types:uex": "openapi-typescript swagger-doc/uex-api-v2.1.json -o src/api/uex/schema.ts",
         "gen:types:wiki": "openapi-typescript swagger-doc/starcitizen-wiki-openapi.yaml -o src/api/wiki/schema.ts",
-        "gen:types": "npm run gen:types:*",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "clean": "rimraf dist",
