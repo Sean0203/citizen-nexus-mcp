@@ -1,36 +1,67 @@
-import { uexGet } from "../api/client.js";
-import { HOUR, MINUTE, TtlCache } from "./cache.js";
-import { components } from "../api/schema.js";
+import { getAllVehicles as fetchVehiclesWiki } from "../api/wiki/client.js";
+import { toVehicleWiki } from "../domain/wiki-vehicle.projection.js";
+import type { VehicleWiki } from "../domain/wiki-vehicle.models.js";
+import { HOUR, TtlCache } from "./cache.js";
+import type { Warmable } from "./warmable.js";
+import { createLogger } from "../logging/logger.js";
+import Fuse, { IFuseOptions } from "fuse.js";
 
-type VehicleDTO = components["schemas"]["VehicleDTO"];
-type VehiclePurchasePriceDTO = components["schemas"]["VehiclePurchasePriceDTO"];
-type VehicleRentalPriceDTO = components["schemas"]["VehicleRentalPriceDTO"];
+const log = createLogger("vehicle.repository");
 
-/** Wraps the UEX vehicle endpoints. Returns raw DTOs, knows nothing about MCP. */
-export class VehicleRepository {
+/** TTL for the vehicle data and index cache entries. */
+const VEHICLE_TTL = 24 * HOUR;
+
+const VEHICLE_DATA_KEY = "vehicles:wiki";
+const VEHICLE_INDEX_KEY = "vehicles:wiki:index";
+
+/** Fuzzy-search tuning for the vehicle catalogue. */
+const VEHICLE_FUSE_OPTIONS: IFuseOptions<VehicleWiki> = {
+    keys: ["name", "game_name", "slug"],
+    threshold: 0.3, // Light typos
+    includeMatches: true,
+    includeScore: true,
+    ignoreLocation: true,
+    ignoreDiacritics: true,
+    minMatchCharLength: 2
+};
+
+export class VehicleRepository implements Warmable {
     constructor(private cache: TtlCache) {}
 
-    // Reference data: slow-changing, cache for a day.
-    getAll(): Promise<VehicleDTO[]> {
-        return this.cache.get("vehicles", 24 * HOUR, () => uexGet<VehicleDTO[]>("/vehicles/"));
+    /** Pre-loads long-lived data into the cache. Meant to be called once at startup. */
+    async warm(): Promise<void> {
+        log.info({ event: "cache_warm_start" });
+        await Promise.all([this.getVehicleIndex()]);
+        log.info({ event: "cache_warm_done" });
     }
 
-    // Price data: community-reported, short TTL.
-    getPurchasePrices(idTerminal: number): Promise<VehiclePurchasePriceDTO[]> {
-        return this.cache.get(`veh_purchase:${idTerminal}`, 5 * MINUTE, () =>
-            uexGet<VehiclePurchasePriceDTO[]>(`/vehicles_purchases_prices/id_terminal/${idTerminal}/`)
-        );
+    /** Flight-ready vehicle catalogue from the wiki, projected and cached for 24h. */
+    getAllVehiclesWiki(): Promise<VehicleWiki[]> {
+        return this.cache.get(VEHICLE_DATA_KEY, VEHICLE_TTL, async () => {
+            const startedAt = Date.now();
+            const raw = await fetchVehiclesWiki();
+            const vehicles = raw
+                .map(toVehicleWiki)
+                .filter((v) => v !== null)
+                .filter((v) => v.production_status === "flight-ready");
+            log.info({
+                event: "vehicle_catalogue_loaded",
+                fetched: raw.length,
+                kept: vehicles.length,
+                ms: Date.now() - startedAt
+            });
+            this.cache.clear(VEHICLE_INDEX_KEY);
+            return vehicles;
+        });
     }
 
-    getAllPurchasePrices(): Promise<VehiclePurchasePriceDTO[]> {
-        return this.cache.get("veh_purchase_all", 5 * MINUTE, () =>
-            uexGet<VehiclePurchasePriceDTO[]>("/vehicles_purchases_prices_all/")
-        );
-    }
-
-    getAllRentalPrices(): Promise<VehicleRentalPriceDTO[]> {
-        return this.cache.get("veh_rental_all", 5 * MINUTE, () =>
-            uexGet<VehicleRentalPriceDTO[]>("/vehicles_rentals_prices_all/")
-        );
+    /** Fuzzy-search index over the flight-ready vehicle catalogue, cached for 24h. */
+    getVehicleIndex(): Promise<Fuse<VehicleWiki>> {
+        return this.cache.get(VEHICLE_INDEX_KEY, VEHICLE_TTL, async () => {
+            const vehicles = await this.getAllVehiclesWiki();
+            const index = new Fuse(vehicles, VEHICLE_FUSE_OPTIONS);
+            log.info({ event: "vehicle_index_built", count: vehicles.length });
+            return index;
+        });
     }
 }

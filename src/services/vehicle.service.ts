@@ -1,37 +1,50 @@
 import type { VehicleRepository } from "../repositories/vehicle.repository.js";
-import { toPurchaseLocation, toRentalLocation, toVehicleSummary } from "../domain/projections.js";
-import type { PriceLocation, VehicleSummary } from "../domain/models.js";
+import type { VehicleWiki } from "../domain/wiki-vehicle.models.js";
+import { FuseResult, FuseResultMatch } from "fuse.js";
+import { createLogger } from "../logging/logger.js";
 
-/** Business logic for vehicles: name search and price lookups. */
+const log = createLogger("vehicle.service");
+
+const VEHICLE_MAX_SEARCH_RESULTS = 10;
+const SCORE_EPSILON = 1e-6;
+
+/** Whole-item coverage: matched characters over total field length, across all matched fields. */
+function itemCoverage(matches: readonly FuseResultMatch[]): number {
+    let matched = 0;
+    let total = 0;
+    for (const m of matches) {
+        matched += m.indices.reduce((sum, [start, end]) => sum + (end - start + 1), 0);
+        total += m.value?.length ?? 0;
+    }
+    return total === 0 ? 0 : matched / total;
+}
+
+/** Comparator: keep Fuse's score order, but break score ties by higher match coverage (then shorter slug). */
+function compareResults(a: FuseResult<VehicleWiki>, b: FuseResult<VehicleWiki>): number {
+    const scoreA = a.score ?? 0;
+    const scoreB = b.score ?? 0;
+    if (Math.abs(scoreA - scoreB) > SCORE_EPSILON) return scoreA - scoreB;
+
+    const covA = itemCoverage(a.matches ?? []);
+    const covB = itemCoverage(b.matches ?? []);
+    if (Math.abs(covA - covB) > SCORE_EPSILON) return covB - covA; // higher coverage first
+
+    return (a.item.slug?.length ?? 0) - (b.item.slug?.length ?? 0); // deterministic fallback
+}
+
+/** Business logic for vehicles: fuzzy name search over the repository's cached index. */
 export class VehicleService {
     constructor(private repo: VehicleRepository) {}
 
-    async search(query: string): Promise<VehicleSummary[]> {
-        const needle = query.trim().toLowerCase();
-        const all = await this.repo.getAll();
-        return all
-            .filter((v) => [v.name, v.name_full, v.slug].some((f) => f?.toLowerCase().includes(needle)))
-            .slice(0, 25)
-            .map(toVehicleSummary);
+    /** Fuzzy-search vehicles, breaking score ties by match coverage before truncating to the limit. */
+    async searchVehicles(query: string): Promise<VehicleWiki[]> {
+        const index = await this.repo.getVehicleIndex();
+        const results = index.search(query.trim());
+        const items = results
+            .sort(compareResults)
+            .slice(0, VEHICLE_MAX_SEARCH_RESULTS)
+            .map((res) => res.item);
+        log.debug({ event: "search", query, results: items.length });
+        return items;
     }
-
-    async findPurchaseLocations(idVehicle: number): Promise<PriceLocation[]> {
-        const prices = await this.repo.getAllPurchasePrices();
-        return prices
-            .filter((p) => p.id_vehicle === idVehicle)
-            .map(toPurchaseLocation)
-            .sort(byPriceAsc);
-    }
-
-    async findRentalLocations(idVehicle: number): Promise<PriceLocation[]> {
-        const prices = await this.repo.getAllRentalPrices();
-        return prices
-            .filter((p) => p.id_vehicle === idVehicle)
-            .map(toRentalLocation)
-            .sort(byPriceAsc);
-    }
-}
-
-function byPriceAsc(a: PriceLocation, b: PriceLocation): number {
-    return (a.price ?? Infinity) - (b.price ?? Infinity);
 }
