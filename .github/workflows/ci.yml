@@ -1,16 +1,18 @@
 name: Build and test
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout.
+      - name: Checkout
         uses: actions/checkout@v7
 
       - name: Use Node v24.16.0
