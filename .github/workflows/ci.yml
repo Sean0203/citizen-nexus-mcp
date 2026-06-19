@@ -1,5 +1,7 @@
 name: Build and test
 on:
+  push:
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -18,10 +20,16 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Check formatting
+        run: npx prettier --check .
+
+      - name: Lint
+        run: npm run lint
 
       - name: Build project
         run: npm run build
 
       - name: Run tests
-        run: npm test
+        run: npm run test:coverage

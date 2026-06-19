@@ -10,13 +10,13 @@ function getBaseUrl(): string {
 }
 
 function getApiKey(): string {
-    const key = process.env.UEX_API_KEY;
-    if (!key) {
+    const bearer = process.env.UEX_BEARER_TOKEN;
+    if (!bearer) {
         throw new UexApiError(
-            "UEX_API_KEY is not set. Provide it via your MCP client config (env block) or a .env file."
+            "UEX_BEARER_TOKEN is not set. Provide it via your MCP client config (env block) or a .env file."
         );
     }
-    return key;
+    return bearer;
 }
 
 // UEX 2.0 wraps every payload in this envelope. Confirm against a live
