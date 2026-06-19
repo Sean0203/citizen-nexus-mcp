@@ -103,6 +103,43 @@ describe("toVehicleWiki", () => {
         expect(result?.cargo_grids[0]).toMatchObject({ width: 2, height: 1, length: 4 });
     });
 
+    it("should set max_scu_box to the largest box across cargo grids", () => {
+        // Metric dims feed metricToSCUCargoGrid: 2.5^3 -> 8 SCU box, 2.5x2.5x10 -> 32 SCU box.
+        const result = toVehicleWiki(
+            rawVehicle({
+                cargo_grids: [
+                    {
+                        uuid: "g1",
+                        width: 2.5,
+                        height: 2.5,
+                        length: 2.5,
+                        volume: 8,
+                        scu: 8,
+                        open: false,
+                        external: false,
+                        closed: false
+                    },
+                    {
+                        uuid: "g2",
+                        width: 2.5,
+                        height: 2.5,
+                        length: 10,
+                        volume: 32,
+                        scu: 32,
+                        open: false,
+                        external: false,
+                        closed: false
+                    }
+                ]
+            })
+        );
+        expect(result?.max_scu_box).toBe(32);
+    });
+
+    it("should set max_scu_box to 0 when there are no cargo grids", () => {
+        expect(toVehicleWiki(rawVehicle())?.max_scu_box).toBe(0);
+    });
+
     it("should pass uex_prices through when present", () => {
         const purchase = [{ price_buy: 100 }];
         const rental = [{ price_rent: 5 }];

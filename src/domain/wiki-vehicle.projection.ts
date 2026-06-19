@@ -75,6 +75,9 @@ export function toVehicleWiki(gv: GameVehicle): VehicleWiki | null {
         return null;
     }
 
+    // Compute cargo grids in scu
+    const cargoGrids = r.cargo_grids?.map(metricToSCUCargoGrid) ?? [];
+
     return {
         uuid: r.uuid ?? null,
         name: r.name ?? null,
@@ -106,8 +109,9 @@ export function toVehicleWiki(gv: GameVehicle): VehicleWiki | null {
 
         cargo_capacity: r.cargo_capacity ?? null,
         ore_capacity: r.ore_capacity ?? null,
-        max_scu_box: r.cargo_limits?.min_scu_box ?? null,
-        cargo_grids: r.cargo_grids?.map(metricToSCUCargoGrid) ?? [],
+        cargo_grids: cargoGrids,
+        // max_scu_box: r.cargo_limits?.min_scu_box ?? null,
+        max_scu_box: cargoGrids.reduce((a, b) => Math.max(a, b.max_scu_box), 0),
 
         quantum: {
             quantum_speed: r.quantum?.quantum_speed ?? null,

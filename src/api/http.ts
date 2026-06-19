@@ -17,7 +17,7 @@ export class ApiError extends Error {
 const DEFAULT_TIMEOUT_MS = 15_000;
 
 /** Identifies this client to community APIs. Update the URL to the published repo. */
-const USER_AGENT = "citizen-nexus-mcp/0.1.0 (+https://github.com/OWNER/citizen-nexus-mcp)";
+const USER_AGENT = "citizen-nexus-mcp/0.1.0 (+https://github.com/Sean0203/citizen-nexus-mcp)";
 
 export interface HttpGetOptions {
     /** Absolute base URL, with or without a trailing slash. */
