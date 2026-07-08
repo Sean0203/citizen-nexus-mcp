@@ -29,22 +29,83 @@ locations, UEC prices).
 <details>
 <summary>Prompt example</summary>
 
-![img.png](doc/assets/examples/search_vehicles_ex.png)
+![search_vehicles_ex.png](doc/assets/examples/search_vehicles_ex.png)
 
 </details>
 
 ## 📝 Requirements
 
+Node >= 24.16.0
+
 You will need an MCP client installed on your computer. I recommend
 the [Claude desktop app](https://claude.com/download). However, if you run out of usage too quickly, you could
 install [Dive](https://github.com/OpenAgentPlatform/Dive) and use a Gemini Api Key
-from [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-key) (500 requests/day with Gemini 3.1 Flash Lite).
+from [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-key) (500 requests/day with the Gemini 3.1 Flash Lite
+model).
 
-## 📦 Installation
+> ⚠️ **Note**: Citizen Nexus was built mainly with Claude in mind. So while I add more tools and use cases, other models
+> might give unexpected results
+
+## 📦 Installation and setup
 
 ---
 
+Start by cloning the repository and navigating inside it. Then, run the following command:
+
+`npm install && npm run build`
+
+Next, get the full path to the `dist/index.json` file.
+
 ### Claude Desktop App
+
+Edit the `claude_desktop_config.json` file. You can find its location from the Claude app in
+`Settings > Developer > Edit Config`. Add this configuration to the file, replacing `path/to/index.js` with the path
+that you identified right before:
+
+```json
+{
+  "mcpServers": {
+    "citizen-nexus": {
+      "command": "node",
+      "args": [
+        "path/to/index.js"
+      ]
+    }
+  }
+}
+```
+
+Save the file and restart the Claude desktop app. Before using the server in a chat. Make sure that it is enabled:
+
+![enable_server_in_claude.png](doc/assets/examples/enable_server_in_claude.png)
+
+### Dive
+
+After setting up your model provider, open the MCP Tools Management tabs in the settings and click
+`Add / Edit MCP Config`. Paste this configuration in the JSON field, replacing `path/to/index.js` with the path
+that you identified right before:
+
+```json
+{
+  "mcpServers": {
+    "citizen nexus": {
+      "transport": "stdio",
+      "enabled": true,
+      "command": "node",
+      "args": [
+        "path/to/index.js"
+      ]
+    }
+  }
+}
+```
+
+Click `Save`. Before using the server in a chat, make sure that it is enabled:
+
+![enable_server_in_dive.png](doc/assets/examples/enable_server_in_dive.png)
+
+> ℹ️ **Note**: If you ever get issues related to the node command, you could try to replace `node` with its full path,
+> which you can find with this command: `get-command node`.
 
 ## Usage
 
