@@ -24,10 +24,12 @@ registerVehicleTools(server, container.vehicleService);
 
 async function main(): Promise<void> {
     const transport = new StdioServerTransport();
+    server.server.oninitialized = () => {
+        // Client has completed the handshake; safe to start forwarding logs over the protocol.
+        attachMcpServer(server);
+        console.warn("[citizen-nexus] ready (stdio)");
+    };
     await server.connect(transport);
-    // Client is connected, deliver logs to it. Logs before this point go to stderr only.
-    attachMcpServer(server);
-    console.warn("[citizen-nexus] ready (stdio)");
 }
 
 main().catch((err) => {
