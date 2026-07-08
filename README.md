@@ -8,19 +8,18 @@ An MCP server that fetches data from the Star Citizen wiki and UEX.
 
 ---
 
-This project is an [MCP server](https://modelcontextprotocol.io/docs/getting-started/intro) that gathers data
-from the [Star Citizen Wiki](https://starcitizen.tools/) and [UEX](https://uexcorp.space/) via their respective APIs.
-This will allow new and veteran
-players to search for information like item and vehicle purchase locations, commodity prices, and more with their
-favorite LLM. You can plug it into any LLM client that supports MCP servers, like Claude.
+This project is an [MCP server](https://modelcontextprotocol.io/docs/getting-started/intro) that gathers data from
+the [Star Citizen Wiki](https://starcitizen.tools/) and [UEX](https://uexcorp.space/) via their respective APIs,
+letting new and veteran players alike look up item and vehicle purchase locations, commodity prices, and more
+directly from their favorite LLM. Plug it into any MCP compatible client accepting stdio, such as Claude.
 
 ## ⚙️ Exposed tools
 
 ### `search_vehicles`
 
-Find Star Citizen flight-ready ships and ground vehicles by name. Returns matching vehicles with key details (
-manufacturer, classification, crew, cargo, quantum travel) and any in-game purchase or rental listings (terminals,
-locations, UEC prices).
+Finds Star Citizen flight-ready ships and ground vehicles by name. Returns matching vehicles with key details
+(manufacturer, classification, crew, cargo, quantum travel) along with any in-game purchase or rental listings
+(terminals, locations, UEC prices).
 
 **Parameters:**
 
@@ -38,29 +37,29 @@ locations, UEC prices).
 Node >= 24.16.0
 
 You will need an MCP client installed on your computer. I recommend
-the [Claude desktop app](https://claude.com/download). However, if you run out of usage too quickly, you could
-install [Dive](https://github.com/OpenAgentPlatform/Dive) and use a Gemini Api Key
-from [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-key) (500 requests/day with the Gemini 3.1 Flash Lite
-model).
+the [Claude desktop app](https://claude.com/download).
+If you run out of usage too quickly, you can install [Dive](https://github.com/OpenAgentPlatform/Dive) instead and
+use a Gemini API key from [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-key) (500 requests/day with
+the Gemini 3.1 Flash Lite model).
 
-> ⚠️ **Note**: Citizen Nexus was built mainly with Claude in mind. So while I add more tools and use cases, other models
-> might give unexpected results
+> ⚠️ **Note**: Citizen Nexus was built mainly with Claude in mind. As more tools and use cases are added, other models
+> might give unexpected results.
 
 ## 📦 Installation and setup
 
 ---
 
-Start by cloning the repository and navigating inside it. Then, run the following command:
+Start by cloning the repository and navigating into it, then run:
 
 `npm install && npm run build`
 
-Next, get the full path to the `dist/index.json` file.
+Next, take note of the full path to the `dist/index.js` file.
 
 ### Claude Desktop App
 
-Edit the `claude_desktop_config.json` file. You can find its location from the Claude app in
-`Settings > Developer > Edit Config`. Add this configuration to the file, replacing `path/to/index.js` with the path
-that you identified right before:
+Edit the `claude_desktop_config.json` file. You can find its location in the Claude app under
+`Settings > Developer > Edit Config`. Add the following configuration, replacing `path/to/index.js` with the path
+you identified above:
 
 ```json
 {
@@ -75,15 +74,15 @@ that you identified right before:
 }
 ```
 
-Save the file and restart the Claude desktop app. Before using the server in a chat. Make sure that it is enabled:
+Save the file and restart the Claude desktop app. Before using the server in a chat, make sure it is enabled:
 
 ![enable_server_in_claude.png](doc/assets/examples/enable_server_in_claude.png)
 
 ### Dive
 
-After setting up your model provider, open the MCP Tools Management tabs in the settings and click
-`Add / Edit MCP Config`. Paste this configuration in the JSON field, replacing `path/to/index.js` with the path
-that you identified right before:
+After setting up your model provider, open the MCP Tools Management tab in the settings and click
+`Add / Edit MCP Config`. Paste the following configuration into the JSON field, replacing `path/to/index.js` with
+the path you identified above:
 
 ```json
 {
@@ -100,12 +99,12 @@ that you identified right before:
 }
 ```
 
-Click `Save`. Before using the server in a chat, make sure that it is enabled:
+Click `Save`. Before using the server in a chat, make sure it is enabled:
 
 ![enable_server_in_dive.png](doc/assets/examples/enable_server_in_dive.png)
 
-> ℹ️ **Note**: If you ever get issues related to the node command, you could try to replace `node` with its full path,
-> which you can find with this command: `get-command node`.
+> ℹ️ **Note**: If you run into issues with the `node` command, try replacing it with its full path, which you can
+> find using this command: `Get-Command node`.
 
 ## Usage
 

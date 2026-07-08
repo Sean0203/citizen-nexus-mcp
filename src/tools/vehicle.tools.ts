@@ -12,8 +12,8 @@ export function registerVehicleTools(server: McpServer, service: VehicleService)
         {
             title: "Search vehicles",
             description:
-                "Find Star Citizen flight-ready ships and ground vehicles by name. Returns matching vehicles with key " +
-                "details (manufacturer, classification, crew, cargo, quantum travel) and any in-game purchase " +
+                "Finds Star Citizen flight-ready ships and ground vehicles by name. Returns matching vehicles with key " +
+                "details (manufacturer, classification, crew, cargo, quantum travel) along with any in-game purchase " +
                 "or rental listings (terminals, locations, UEC prices).",
             inputSchema: {
                 query: z.string().describe("Full or partial vehicle name, e.g. 'Constellation'")
