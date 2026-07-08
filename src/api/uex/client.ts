@@ -1,22 +1,11 @@
 import { z } from "zod";
 import { ApiError, httpGetJson } from "../http.js";
 
-// Read env lazily. The value may come from the MCP client
-// config or from a local .env file (loaded by dotenv in the entry point). Reading inside the
-// request guarantees it is present regardless of import/load order.
-// The client config takes priority over the .env file.
+// Read env lazily. The value may come from the MCP client config or from a local .env file
+// (loaded by dotenv in the entry point). Reading inside the request guarantees it is present regardless of
+// import/load order. The client config takes priority over the .env file.
 function getBaseUrl(): string {
     return process.env.UEX_BASE_URL ?? "https://api.uexcorp.uk/2.0";
-}
-
-function getApiKey(): string {
-    const bearer = process.env.UEX_BEARER_TOKEN;
-    if (!bearer) {
-        throw new UexApiError(
-            "UEX_BEARER_TOKEN is not set. Provide it via your MCP client config (env block) or a .env file."
-        );
-    }
-    return bearer;
 }
 
 // UEX 2.0 wraps every payload in this envelope.
@@ -38,7 +27,6 @@ export async function uexGet<T>(path: string, query?: Record<string, string | nu
         baseUrl: getBaseUrl(),
         path,
         query,
-        headers: { Authorization: `Bearer ${getApiKey()}` },
         errorType: UexApiError
     });
 
