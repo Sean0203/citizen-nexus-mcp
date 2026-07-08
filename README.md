@@ -66,9 +66,7 @@ you identified above:
   "mcpServers": {
     "citizen-nexus": {
       "command": "node",
-      "args": [
-        "path/to/index.js"
-      ]
+      "args": ["path/to/index.js"]
     }
   }
 }
@@ -91,9 +89,7 @@ the path you identified above:
       "transport": "stdio",
       "enabled": true,
       "command": "node",
-      "args": [
-        "path/to/index.js"
-      ]
+      "args": ["path/to/index.js"]
     }
   }
 }
