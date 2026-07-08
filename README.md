@@ -29,36 +29,22 @@ locations, UEC prices).
 <details>
 <summary>Prompt example</summary>
 
-**Prompt:**
-
-> Where can I rent the cutter for the cheapest?
-
-**Reply:**
-
-``` markdown
-Cheapest rental for the Cutter (base):
-
-| Price          | Location                                   |
-|----------------|--------------------------------------------|
-| **9,049 aUEC** | Traveler Rentals - Pyro Gateway (Stanton)  |
-| 9,050 aUEC     | Traveler Rentals - Everus Harbor (Hurston) |
-| 9,525 aUEC     | Most other Traveler Rentals terminals      |
-| 15,083 aUEC    | Vantage Rentals - Lorville (avoid)         |
-
-**Pyro Gateway (Stanton side)** is your cheapest option by a hair. The Cutter Scout and Rambler variants have no rental
-listings currently.
-```
+![img.png](doc/assets/examples/search_vehicles_ex.png)
 
 </details>
 
 ## 📝 Requirements
 
-
-
+You will need an MCP client installed on your computer. I recommend
+the [Claude desktop app](https://claude.com/download). However, if you run out of usage too quickly, you could
+install [Dive](https://github.com/OpenAgentPlatform/Dive) and use a Gemini Api Key
+from [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-key) (500 requests/day with Gemini 3.1 Flash Lite).
 
 ## 📦 Installation
 
 ---
+
+### Claude Desktop App
 
 ## Usage
 
@@ -71,6 +57,7 @@ listings currently.
 If you find this tool useful, you can buy me a coffee 😊
 
 <a href='https://ko-fi.com/J0V120R4A1' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
 ## 📌 Acknowledgements and disclaimers
 
 ---
