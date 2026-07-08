@@ -79,6 +79,7 @@ describe("wikiGetList", () => {
             mockHttp.mockRejectedValue(httpError(429));
 
             const promise = wikiGetList("/api/vehicles");
+            // eslint-disable-next-line vitest/valid-expect -- assertion is awaited below, after fake timers advance
             const assertion = expect(promise).rejects.toMatchObject({ status: 429 });
             await vi.advanceTimersByTimeAsync(1000 + 2000 + 3000); // three linear backoffs
             await assertion;
