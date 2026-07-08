@@ -6,6 +6,8 @@ updates:
     target-branch: "master"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: chore
     open-pull-requests-limit: 5
     cooldown:
       default-days: 7
