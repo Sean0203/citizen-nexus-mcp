@@ -49,12 +49,6 @@ model).
 
 ---
 
-Start by cloning the repository and navigating into it, then run:
-
-`npm install && npm run build`
-
-Next, take note of the full path to the `dist/index.js` file.
-
 ### Claude Desktop App
 
 Edit the `claude_desktop_config.json` file. You can find its location in the Claude app under
@@ -65,8 +59,11 @@ identified above:
 {
   "mcpServers": {
     "citizen-nexus": {
-      "command": "node",
-      "args": ["path/to/index.js"]
+      "command": "npx",
+      "args": [
+        "-y",
+        "citizen-nexus-mcp"
+      ]
     }
   }
 }
@@ -85,11 +82,14 @@ path you identified above:
 ```json
 {
   "mcpServers": {
-    "citizen nexus": {
+    "citizen-nexus": {
       "transport": "stdio",
       "enabled": true,
-      "command": "node",
-      "args": ["path/to/index.js"]
+      "command": "npx",
+      "args": [
+        "-y",
+        "citizen-nexus-mcp"
+      ]
     }
   }
 }
