@@ -1,3 +1,4 @@
+CHANGELOG.md
 package-lock.json
 swagger-doc/
 src/api/**/schema.ts

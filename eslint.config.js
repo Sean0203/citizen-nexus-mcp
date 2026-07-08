@@ -5,7 +5,7 @@ import vitest from "@vitest/eslint-plugin";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-    globalIgnores(["src/api/*/schema.ts"]),
+    globalIgnores(["src/api/*/schema.ts", "CHANGELOG.md"]),
     {
         files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
         plugins: { js },
