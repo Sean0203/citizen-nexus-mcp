@@ -62,10 +62,7 @@ Edit the `claude_desktop_config.json` file. You can find its location in the Cla
   "mcpServers": {
     "citizen-nexus": {
       "command": "npx",
-      "args": [
-        "-y",
-        "citizen-nexus-mcp"
-      ]
+      "args": ["-y", "citizen-nexus-mcp"]
     }
   }
 }
@@ -87,10 +84,7 @@ After setting up your model provider, open the MCP Tools Management tab in the s
       "transport": "stdio",
       "enabled": true,
       "command": "npx",
-      "args": [
-        "-y",
-        "citizen-nexus-mcp"
-      ]
+      "args": ["-y", "citizen-nexus-mcp"]
     }
   }
 }
