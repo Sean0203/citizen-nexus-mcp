@@ -13,6 +13,9 @@ the [Star Citizen Wiki](https://starcitizen.tools/) and [UEX](https://uexcorp.sp
 new and veteran players alike look up item and vehicle purchase locations, commodity prices, and more directly from
 their favorite LLM. Plug it into any MCP compatible client accepting stdio, such as Claude.
 
+> ℹ️ **Note**: Citizen Nexus runs locally on your own machine over stdio. It is not designed or supported as a remotely
+> hosted or network-exposed server.
+
 ## ⚙️ Exposed tools
 
 ### `search_vehicles`
@@ -52,8 +55,7 @@ model).
 ### Claude Desktop App
 
 Edit the `claude_desktop_config.json` file. You can find its location in the Claude app under
-`Settings > Developer > Edit Config`. Add the following configuration, replacing `path/to/index.js` with the path you
-identified above:
+`Settings > Developer > Edit Config`. Add the following configuration:
 
 ```json
 {
@@ -76,8 +78,7 @@ Save the file and restart the Claude desktop app. Before using the server in a c
 ### Dive
 
 After setting up your model provider, open the MCP Tools Management tab in the settings and click
-`Add / Edit MCP Config`. Paste the following configuration into the JSON field, replacing `path/to/index.js` with the
-path you identified above:
+`Add / Edit MCP Config`. Paste the following configuration into the JSON field:
 
 ```json
 {
