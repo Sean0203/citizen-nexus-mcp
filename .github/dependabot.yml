@@ -18,6 +18,15 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      # @types/node major version tracks the Node.js major version; stay on the
+      # LTS line (engines.node in package.json) instead of jumping to Current.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # openapi-typescript peer-depends on typescript@^5.x; TS 6 breaks npm
+      # install (ERESOLVE) until it publishes a compatible release.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   # GitHub Actions used in workflows
   - package-ecosystem: "github-actions"
